@@ -75,7 +75,6 @@ public class HotelBillManageApp extends JFrame {
         editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
         findButton = new JButton("Find");
-        saveButton = new JButton("Save");
         inputPanel.add(new JLabel("Tên khách hàng:"));
         inputPanel.add(tenkhachhangTextField);
         inputPanel.add(new JLabel("Số phòng:"));
@@ -98,7 +97,6 @@ public class HotelBillManageApp extends JFrame {
         buttonsPanel.add(editButton);
         buttonsPanel.add(deleteButton);
         buttonsPanel.add(findButton);
-        buttonsPanel.add(saveButton);
         JPanel mainInputPanel = new JPanel(new BorderLayout());
         mainInputPanel.add(inputPanel, BorderLayout.CENTER);
         mainInputPanel.add(buttonsPanel, BorderLayout.SOUTH);
@@ -134,12 +132,38 @@ public class HotelBillManageApp extends JFrame {
         });
         findButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                showFindDialog();
             }
         });
 
     }
+    private void showFindDialog() {
+        // Tạo dialog
+        JDialog findDialog = new JDialog(this, "Tìm kiếm khách hàng");
+        findDialog.setSize(300, 70);
+        findDialog.setLayout(new GridLayout(1, 2));
+        
+        // Tạo components cho dialog
+        JLabel nameLabel = new JLabel("Tên khách hàng:");
+        JTextField searchTextField = new JTextField();
 
+    
+        findDialog.add(nameLabel,BorderLayout.SOUTH);
+        findDialog.add(searchTextField,BorderLayout.SOUTH);
+
+
+    
+        // Add action listener cho nút "Tìm kiếm"
+        searchTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchName = searchTextField.getText();
+            }
+        });
+    
+        findDialog.setVisible(true);
+    }
+    
     private void showCountDialogCount() {
         // Create the count dialog
         JDialog countDialog = new JDialog(this, "Tính số lượng hóa đơn");
