@@ -177,7 +177,7 @@ public class HotelBillManageApp extends JFrame {
                 String selectedInvoiceType = (String) invoiceTypeComboBox.getSelectedItem();
                 String selectedMonth = (String) monthComboBox.getSelectedItem();
         
-                resultLabel.setText("Selected Invoice Type: " + selectedInvoiceType + ", Month: " + selectedMonth);
+                resultLabel.setText("10");
             }
         });
 
@@ -185,7 +185,7 @@ public class HotelBillManageApp extends JFrame {
     }
     private void showCountDialogAverage() {
         // Create the count dialog
-        JDialog countDialog = new JDialog(this, "Tính số lượng hóa đơn");
+        JDialog countDialog = new JDialog(this, "Tính thành tiền trung bình");
         countDialog.setSize(300, 150);
         countDialog.setLayout(new GridLayout(4, 2));
         String[] months = { "tháng 1", "tháng 2", "tháng 3", "tháng 4", "tháng 5", "tháng 6", "tháng 7",
@@ -198,19 +198,20 @@ public class HotelBillManageApp extends JFrame {
         }
         JComboBox<String> yearComboBox = new JComboBox<>(years);
         JComboBox<String> monthComboBox = new JComboBox<>(months);
-        JButton countButton = new JButton("Tính toán");
+        JButton averageButton = new JButton("Tính toán");
         JLabel resultLabel = new JLabel("Tổng cộng:");
         countDialog.add(new JLabel("Tháng :"));
         countDialog.add(monthComboBox);
         countDialog.add(new JLabel("Năm :"));
         countDialog.add(yearComboBox);
-        countDialog.add(countButton, BorderLayout.SOUTH);
+        countDialog.add(averageButton, BorderLayout.SOUTH);
         countDialog.add(resultLabel, BorderLayout.SOUTH);
 
         // Add action listener for the count button
-        countButton.addActionListener(new ActionListener() {
+        averageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                 resultLabel.setText("100.000d");
             }
         });
 
