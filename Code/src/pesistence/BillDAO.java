@@ -20,4 +20,8 @@ public interface BillDAO {
 
     List<Bill> getAllBill();
 
+    void updateRoomStatus(int roomId, boolean status);
+
+    boolean getRoomStatus(int roomId);
+
 }

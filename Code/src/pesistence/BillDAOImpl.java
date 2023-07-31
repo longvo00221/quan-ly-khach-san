@@ -50,4 +50,14 @@ public class BillDAOImpl implements BillDAO {
         return this.billGateWay.getAllBill();
     }
 
+    @Override
+    public void updateRoomStatus(int roomId, boolean status) {
+        this.billGateWay.updateRoomStatus(roomId, status);
+    }
+
+    @Override
+    public boolean getRoomStatus(int roomId) {
+        return this.billGateWay.getRoomStatus(roomId);
+    }
+
 }
