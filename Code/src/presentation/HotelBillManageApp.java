@@ -152,8 +152,6 @@ public class HotelBillManageApp extends JFrame {
         findDialog.add(searchTextField,BorderLayout.SOUTH);
 
 
-    
-        // Add action listener cho nút "Tìm kiếm"
         searchTextField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
