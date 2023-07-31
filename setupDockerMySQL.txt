@@ -1,0 +1,7 @@
+Hướng dẫn docker
+B1 Mở docker
+B2 Mở terminal
+B4  Gõ docker pull phanhung28/mysql-v1:latest
+B5 Gõ docker run -d --name my_mysql_container -e MYSQL_ROOT_PASSWORD=1234 phanhung28/mysql-v1:latest
+B6: gõ docker run -d --name my_adminer_container -p 8888:8080 --link my_mysql_container:db adminer
+
