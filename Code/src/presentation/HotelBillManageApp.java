@@ -3,6 +3,14 @@ package presentation;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import presentation.Command.AddCommand;
+import presentation.Command.AverageCommand;
+import presentation.Command.CountCommand;
+import presentation.Command.DeleteCommand;
+import presentation.Command.EditCommand;
+import presentation.Command.FindCommand;
+import presentation.Invoker.Invoker;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,11 +35,17 @@ public class HotelBillManageApp extends JFrame {
     private JTextField phongTextField;
     private JTextField sodienthoaiTextField;
 
+    private Invoker invoker;
+   
+    
+
     public HotelBillManageApp() {
         setTitle("Hotel Bill Management");
         setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+
+        
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
@@ -117,17 +131,20 @@ public class HotelBillManageApp extends JFrame {
         });
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                AddCommand addCommand = new AddCommand();
+                clearFields();
             }
         });
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                EditCommand editCommand = new EditCommand();
+                clearFields();
             }
         });
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                DeleteCommand deleteCommand = new DeleteCommand();
+                clearFields();
             }
         });
         findButton.addActionListener(new ActionListener() {
@@ -156,6 +173,7 @@ public class HotelBillManageApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String searchName = searchTextField.getText();
+                FindCommand findCommand = new FindCommand();
             }
         });
     
@@ -196,6 +214,7 @@ public class HotelBillManageApp extends JFrame {
         countButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                CountCommand countCommand = new CountCommand();
                 String selectedInvoiceType = (String) invoiceTypeComboBox.getSelectedItem();
                 String selectedMonth = (String) monthComboBox.getSelectedItem();
         
@@ -233,6 +252,7 @@ public class HotelBillManageApp extends JFrame {
         averageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AverageCommand averageCommand = new AverageCommand();
                  resultLabel.setText("100.000d");
             }
         });

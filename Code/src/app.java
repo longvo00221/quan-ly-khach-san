@@ -7,7 +7,7 @@ import domain.model.Bill;
 import pesistence.BillJDBCGateWay;
 import presentation.HotelBillManageApp;
 
-public class App {
+public class app {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
