@@ -17,6 +17,8 @@ public interface BillGateWay {
 
     void averageMonthlyIncome(int month);
 
+    boolean isBillExists(int billId);
+
     List<Bill> getAllBill();
 
     void updateRoomStatus(int roomId, boolean status);

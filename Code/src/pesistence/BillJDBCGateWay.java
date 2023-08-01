@@ -68,14 +68,49 @@ public class BillJDBCGateWay implements BillGateWay {
 
     @Override
     public void deleteBill(int billId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteBill'");
+        String deleteQuery = "DELETE FROM HoaDon WHERE HoaDonId= ?";
+        if (!isBillExists(billId)) {
+            System.out.println("Hóa đơn không tồn tại!");
+            return;
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+            statement.setInt(1, billId);
+            statement.executeUpdate();
+            updateRoomStatus(billId, false);
+        } catch (Exception e) {
+            System.out.println("Lỗi khi xóa ");
+        }
     }
 
     @Override
     public Bill findBill(int billId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findBill'");
+        String findQuery = "Select * from HoaDon WHERE HoaDonId= ?";
+        try (PreparedStatement statement = connection.prepareStatement(findQuery)) {
+            statement.setInt(1, billId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Bill bill = new Bill();
+                    bill.setSoPhong(resultSet.getInt("SoPhong"));
+                    bill.setTenKhachHang(resultSet.getString("TenKhachHang"));
+                    bill.setNgayNhanPhong(resultSet.getDate("NgayNhanPhong"));
+                    bill.setNgayTraPhong(resultSet.getDate("NgayTraPhong"));
+                    bill.setLoaiHoaDon(resultSet.getBoolean("LoaiHoaDon"));
+                    bill.setThang(resultSet.getInt("Thang"));
+                    bill.setDonGia(resultSet.getInt("DonGia"));
+                    bill.setPhongID(resultSet.getInt("PhongId"));
+
+                    return bill;
+
+                }
+            } catch (Exception e) {
+                System.out.println("Không tìm thấy hóa đơn");
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi tìm kiếm");
+
+        }
+        return null;
     }
 
     @Override
@@ -145,6 +180,24 @@ public class BillJDBCGateWay implements BillGateWay {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Select không thành công!");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isBillExists(int billId) {
+        String selectQuery = "SELECT COUNT(*) AS count FROM HoaDon WHERE HoaDonId = ?";
+        try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
+            statement.setInt(1, billId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt("count");
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi khi kiểm tra tồn tại hóa đơn!");
         }
         return false;
     }

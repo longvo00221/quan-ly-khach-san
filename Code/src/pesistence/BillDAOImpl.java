@@ -60,4 +60,9 @@ public class BillDAOImpl implements BillDAO {
         return this.billGateWay.getRoomStatus(roomId);
     }
 
+    @Override
+    public boolean isBillExists(int billId) {
+        return this.billGateWay.isBillExists(billId);
+    }
+
 }
