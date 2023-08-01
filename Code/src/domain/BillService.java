@@ -1,11 +1,10 @@
-package pesistence;
+package domain;
 
 import java.util.List;
 
 import domain.model.Bill;
 
-public interface BillDAO {
-
+public interface BillService {
     void addBill(Bill bill);
 
     void updateBill(Bill bill);
@@ -25,5 +24,4 @@ public interface BillDAO {
     void updateRoomStatus(int roomId, boolean status);
 
     boolean getRoomStatus(int roomId);
-
 }
