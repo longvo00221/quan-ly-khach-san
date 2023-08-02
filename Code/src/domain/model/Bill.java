@@ -2,8 +2,8 @@ package domain.model;
 
 import java.sql.Date;
 
-public class Bill {
-
+public abstract class Bill {
+    private int hoaDonId;
     private int soPhong;
     private String tenKhachHang;
     private Date ngayNhanPhong;
@@ -76,5 +76,15 @@ public class Bill {
     public void setPhongID(int phongID) {
         this.phongID = phongID;
     }
+
+    public int getHoaDonId() {
+        return hoaDonId;
+    }
+
+    public void setHoaDonId(int hoaDonId) {
+        this.hoaDonId = hoaDonId;
+    }
+
+    public abstract int calculateDuration();
 
 }
