@@ -7,6 +7,7 @@ import domain.model.Bill;
 import pesistence.BillDAO;
 import pesistence.BillDAOImpl;
 import pesistence.BillJDBCGateWay;
+import presentation.HotelBillManageApp;
 
 public class BillServiceImpl implements BillService {
     private BillDAO billDAO;
@@ -72,6 +73,22 @@ public class BillServiceImpl implements BillService {
     @Override
     public String normalizeString(String name) {
         return billDAO.normalizeString(name);
+    }
+
+    @Override
+    public void registerView(HotelBillManageApp view) {
+        billDAO.registerView(view);
+    }
+
+    // @Override
+    // public void unregisterView(HotelBillManageApp view) {
+    // billDAO.unregisterView(view);
+    // }
+
+    @Override
+    public void notifyViews() {
+        billDAO.notifyViews();
+
     }
 
 }

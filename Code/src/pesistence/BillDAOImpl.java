@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import domain.model.Bill;
+import presentation.HotelBillManageApp;
 
 public class BillDAOImpl implements BillDAO {
     private BillGateWay billGateWay;
@@ -69,6 +70,23 @@ public class BillDAOImpl implements BillDAO {
     @Override
     public String normalizeString(String name) {
         return this.billGateWay.normalizeString(name);
+    }
+
+    @Override
+    public void registerView(HotelBillManageApp view) {
+        this.billGateWay.registerView(view);
+    }
+
+    // @Override
+    // public void unregisterView(HotelBillManageApp view) {
+    // this.billGateWay.unregisterView(view);
+
+    // }
+
+    @Override
+    public void notifyViews() {
+        this.billGateWay.notifyViews();
+
     }
 
 }

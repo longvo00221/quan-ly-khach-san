@@ -12,6 +12,7 @@ import presentation.Command.CountCommand;
 import presentation.Command.DeleteCommand;
 import presentation.Command.EditCommand;
 import presentation.Command.FindCommand;
+import presentation.Command.SelectCommand;
 import presentation.Invoker.Invoker;
 
 import java.awt.*;
@@ -82,32 +83,14 @@ public class HotelBillManageApp extends JFrame {
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow >= 0) {
                         hoaDonId = (int) table.getValueAt(selectedRow, 0);
-                        String tenKhachHang = table.getValueAt(selectedRow, 3).toString();
-                        String soDienThoai = table.getValueAt(selectedRow, 4).toString();
-                        String soPhong = table.getValueAt(selectedRow, 5).toString();
                         phongId = (int) table.getValueAt(selectedRow, 5);
-                        String thang = table.getValueAt(selectedRow, 6).toString();
-                        String thoiGianNhan = table.getValueAt(selectedRow, 7).toString();
-                        String thoiGianTra = table.getValueAt(selectedRow, 8).toString();
-                        String loaiHoaDon = table.getValueAt(selectedRow, 9).toString();
-                        String donGia = table.getValueAt(selectedRow, 10).toString();
-
-                        if (loaiHoaDon == "Giờ") {
-                            loaihoadonComboBox.setSelectedIndex(0);
-                        } else {
-                            loaihoadonComboBox.setSelectedIndex(1);
-                        }
-                        sophongTextField.setText(soPhong);
-                        sodienthoaiTextField.setText(soDienThoai);
-                        tenkhachhangTextField.setText(tenKhachHang);
-                        thoigiannhanphongTextField.setText(thoiGianNhan);
-                        thoigiantraphongTextField.setText(thoiGianTra);
-
-                        thangTextField.setText(thang);
-                        dongiaTextField.setText(donGia);
-                        sodienthoaiTextField.setText(soDienThoai);
-
                     }
+                    SelectCommand selectCommand = new SelectCommand(table, sophongTextField, sodienthoaiTextField,
+                            tenkhachhangTextField, thoigiannhanphongTextField, thoigiantraphongTextField,
+                            thangTextField, dongiaTextField, loaihoadonComboBox);
+                    invoker.addToQueue(selectCommand);
+                    invoker.executeCommands();
+
                 }
             }
         });
@@ -196,20 +179,17 @@ public class HotelBillManageApp extends JFrame {
                         dongiaTextField, sodienthoaiTextField, billService);
                 invoker.addToQueue(addCommand);
                 invoker.executeCommands();
-                updateTableData();
 
                 clearFields();
             }
         });
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                EditCommand editCommand = new EditCommand(hoaDonId, sophongTextField, tenkhachhangTextField,
+                EditCommand editCommand = new EditCommand(hoaDonId, phongId, sophongTextField, tenkhachhangTextField,
                         thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox, thangTextField,
                         dongiaTextField, sodienthoaiTextField, billService);
                 invoker.addToQueue(editCommand);
                 invoker.executeCommands();
-
-                updateTableData();
 
                 clearFields();
             }
@@ -219,7 +199,6 @@ public class HotelBillManageApp extends JFrame {
                 DeleteCommand deleteCommand = new DeleteCommand(hoaDonId, phongId, billService);
                 invoker.addToQueue(deleteCommand);
                 invoker.executeCommands();
-                updateTableData();
                 clearFields();
             }
         });
@@ -238,13 +217,13 @@ public class HotelBillManageApp extends JFrame {
 
         });
 
-        updateTableData();
+        update();
 
     }
 
     private void showFindDialog() {
         // Tạo dialog
-        JDialog findDialog = new JDialog(this, "Tìm kiếm khách hàng");
+        JDialog findDialog = new JDialog(this, "Tìm kiếm hóa đơn");
         findDialog.setSize(300, 70);
         findDialog.setLayout(new GridLayout(1, 2));
 
@@ -406,6 +385,10 @@ public class HotelBillManageApp extends JFrame {
         thangTextField.setText("");
         dongiaTextField.setText("");
         sodienthoaiTextField.setText("");
+    }
+
+    public void update() {
+        updateTableData();
     }
 
 }

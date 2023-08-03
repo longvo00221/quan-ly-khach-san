@@ -10,17 +10,22 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import domain.model.Bill;
 import domain.model.DayBill;
 import domain.model.HourBill;
+import presentation.HotelBillManageApp;
 
 public class BillJDBCGateWay implements BillGateWay {
     private Connection connection;
+    List<HotelBillManageApp> views = new ArrayList<>();
 
     public BillJDBCGateWay() {
         String dbUrl = "jdbc:mysql://localhost:3306/db_qlks";
         String username = "root";
         String password = "1234";
+        views = new ArrayList<>();
 
         try {
             connection = DriverManager.getConnection(dbUrl, username, password);
@@ -36,7 +41,9 @@ public class BillJDBCGateWay implements BillGateWay {
         boolean roomStatus = getRoomStatus(bill.getPhongID());
 
         if (roomStatus) {
-            System.out.println("Phòng đã có hóa đơn!");
+
+            JOptionPane.showMessageDialog(null, "Phòng đã được thuê", "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         } else {
             String insertQuery = "INSERT INTO HoaDon (SoPhong, TenKhachHang, SoDienThoai, NgayNhanPhong, NgayTraPhong, LoaiHoaDon, Thang, DonGia, PhongId)"
@@ -53,23 +60,32 @@ public class BillJDBCGateWay implements BillGateWay {
                 statement.setInt(9, bill.getPhongID());
 
                 statement.executeUpdate();
-                System.out.println("Thêm bill thành công!");
+                JOptionPane.showMessageDialog(null, "Thêm hóa đơn thành công", "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
 
+                notifyViews();
                 updateRoomStatus(bill.getPhongID(), true);
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("Thêm bill thất bại!");
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         }
 
     }
 
     @Override
+    public void registerView(HotelBillManageApp view) {
+        views.add(view);
+    }
+
+    @Override
     public void updateBill(Bill bill) {
         String updateQuery = "UPDATE HoaDon SET SoPhong = ?, TenKhachHang = ?, NgayNhanPhong = ?, NgayTraPhong = ?, LoaiHoaDon = ?, Thang = ?, DonGia = ?, SoDienThoai = ? WHERE HoaDonId = ?";
         if (!isBillExists(bill.getHoaDonId())) {
-            System.out.println("Hóa đơn không tồn tại!");
+            JOptionPane.showMessageDialog(null, "Hóa đơn không tồn tại", "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -85,10 +101,13 @@ public class BillJDBCGateWay implements BillGateWay {
             statement.setInt(9, bill.getHoaDonId());
 
             statement.executeUpdate();
-            System.out.println("Cập nhật hóa đơn thành công!");
+            updateRoomStatus(bill.getPhongID(), true);
+            notifyViews();
+            JOptionPane.showMessageDialog(null, "Cập nhật thành công!", "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
-            System.out.println(e);
-
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -96,16 +115,22 @@ public class BillJDBCGateWay implements BillGateWay {
     public void deleteBill(int billId, int phongId) {
         String deleteQuery = "DELETE FROM HoaDon WHERE HoaDonId= ?";
         if (!isBillExists(billId)) {
-            System.out.println("Hóa đơn không tồn tại!");
+            JOptionPane.showMessageDialog(null, "Hóa đơn không tồn tại!", "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
             statement.setInt(1, billId);
             statement.executeUpdate();
+            System.out.println(views);
             updateRoomStatus(phongId, false);
+            notifyViews();
+            JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
-            System.out.println("Lỗi khi xóa ");
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -161,12 +186,15 @@ public class BillJDBCGateWay implements BillGateWay {
                 }
 
             } catch (Exception e) {
-                System.err.println(e);
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
-            System.out.println("Lỗi tìm kiếm");
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
 
         }
+        notifyViews();
         return allBills;
     }
 
@@ -183,7 +211,8 @@ public class BillJDBCGateWay implements BillGateWay {
                 }
             }
         } catch (Exception e) {
-            System.err.println(e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
         return 0;
     }
@@ -242,7 +271,8 @@ public class BillJDBCGateWay implements BillGateWay {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
         return allBills;
@@ -301,8 +331,8 @@ public class BillJDBCGateWay implements BillGateWay {
                 allBills.add(bill);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Failed to get all bills!");
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
         return allBills;
@@ -315,10 +345,10 @@ public class BillJDBCGateWay implements BillGateWay {
             statement.setBoolean(1, status);
             statement.setInt(2, roomId);
             statement.executeUpdate();
-            System.out.println("update room thành công!");
+
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("update phòng thất bại!");
+
         }
     }
 
@@ -352,7 +382,7 @@ public class BillJDBCGateWay implements BillGateWay {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Lỗi khi kiểm tra tồn tại hóa đơn!");
+
         }
         return false;
     }
@@ -361,6 +391,20 @@ public class BillJDBCGateWay implements BillGateWay {
     public String normalizeString(String name) {
         String normalized = name.replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         return normalized;
+    }
+
+    // @Override
+    // public void unregisterView(HotelBillManageApp view) {
+    // views.remove(view);
+    // }
+
+    @Override
+    public void notifyViews() {
+        System.out.println(views);
+        for (HotelBillManageApp view : views) {
+
+            view.update();
+        }
     }
 
 }

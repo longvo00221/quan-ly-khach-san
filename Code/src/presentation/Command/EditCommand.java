@@ -12,6 +12,7 @@ import domain.model.HourBill;
 
 public class EditCommand implements Command {
     private int hoaDonId;
+    private int phongIdPrevious;
     private JTextField soPhongTextField;
     private JTextField tenKhachTextField;
     private JTextField soDienThoaiTextField;
@@ -23,7 +24,7 @@ public class EditCommand implements Command {
     private JTextField donGiaTextField;
     private BillService billService;
 
-    public EditCommand(int hoaDonId, JTextField soPhongTextField, JTextField tenKhachTextField,
+    public EditCommand(int hoaDonId, int phongIdPrevious, JTextField soPhongTextField, JTextField tenKhachTextField,
             JTextField thoiGianNhanPhongTextField,
             JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox, JTextField thangTextField,
             JTextField donGiaTextField,
@@ -38,6 +39,7 @@ public class EditCommand implements Command {
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
         this.billService = billService;
+        this.phongIdPrevious = phongIdPrevious;
     };
 
     @Override
@@ -45,6 +47,7 @@ public class EditCommand implements Command {
         if (hoaDonId < 0) {
             return;
         }
+
         int soPhong = Integer.parseInt(soPhongTextField.getText());
         int phongId = soPhong;
         String tenKhachHang = tenKhachTextField.getText();
@@ -57,13 +60,15 @@ public class EditCommand implements Command {
 
         boolean isNgay = false;
 
+        if (phongId != phongIdPrevious) {
+            billService.updateRoomStatus(phongIdPrevious, false);
+        }
+
         if (selectedTypeBill == 1) {
             isNgay = true;
         } else {
             isNgay = false;
         }
-        System.out.println(thoiGianNhanPhong);
-        System.out.println(thoiGianTraPhong);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date ngayNhanPhong = null;
@@ -73,16 +78,11 @@ public class EditCommand implements Command {
             ngayNhanPhong = sdf.parse(thoiGianNhanPhong);
             ngayTraPhong = sdf.parse(thoiGianTraPhong);
 
-            System.out.println(ngayNhanPhong);
-            System.out.println(ngayTraPhong);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         java.sql.Timestamp sqlNgayNhanPhong = new java.sql.Timestamp(ngayNhanPhong.getTime());
         java.sql.Timestamp sqlNgayTraPhong = new java.sql.Timestamp(ngayTraPhong.getTime());
-
-        System.out.println(sqlNgayNhanPhong);
-        System.out.println(sqlNgayTraPhong);
 
         if (isNgay) {
             DayBill bill = new DayBill();
@@ -96,7 +96,6 @@ public class EditCommand implements Command {
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);
             bill.setHoaDonId(hoaDonId);
-
             billService.updateBill(bill);
 
         } else {
