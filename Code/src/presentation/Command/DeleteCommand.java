@@ -1,10 +1,22 @@
 package presentation.Command;
 
-public class DeleteCommand implements Command{
-    public DeleteCommand() {};
+import domain.BillService;
+
+public class DeleteCommand implements Command {
+    private int hoaDonId;
+    private BillService billService;
+
+    public DeleteCommand(int hoaDonId, BillService billService) {
+        this.hoaDonId = hoaDonId;
+        this.billService = billService;
+    };
+
     @Override
     public void executed() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'executed'");
+        if (hoaDonId < 0) {
+            return;
+        }
+
+        billService.deleteBill(hoaDonId);
     }
 }

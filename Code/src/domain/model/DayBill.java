@@ -1,6 +1,8 @@
 package domain.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -8,7 +10,7 @@ public class DayBill extends Bill {
     private int soNgay;
 
     @Override
-    public int getDonGia() {
+    public double getDonGia() {
         // TODO Auto-generated method stub
         return super.getDonGia();
     }
@@ -26,13 +28,13 @@ public class DayBill extends Bill {
     }
 
     @Override
-    public Date getNgayNhanPhong() {
+    public Timestamp getNgayNhanPhong() {
         // TODO Auto-generated method stub
         return super.getNgayNhanPhong();
     }
 
     @Override
-    public Date getNgayTraPhong() {
+    public Timestamp getNgayTraPhong() {
         // TODO Auto-generated method stub
         return super.getNgayTraPhong();
     }
@@ -62,7 +64,7 @@ public class DayBill extends Bill {
     }
 
     @Override
-    public void setDonGia(int donGia) {
+    public void setDonGia(double donGia) {
         // TODO Auto-generated method stub
         super.setDonGia(donGia);
     }
@@ -80,13 +82,13 @@ public class DayBill extends Bill {
     }
 
     @Override
-    public void setNgayNhanPhong(Date ngayNhanPhong) {
+    public void setNgayNhanPhong(Timestamp ngayNhanPhong) {
         // TODO Auto-generated method stub
         super.setNgayNhanPhong(ngayNhanPhong);
     }
 
     @Override
-    public void setNgayTraPhong(Date ngayTraPhong) {
+    public void setNgayTraPhong(Timestamp ngayTraPhong) {
         // TODO Auto-generated method stub
         super.setNgayTraPhong(ngayTraPhong);
     }
@@ -132,6 +134,42 @@ public class DayBill extends Bill {
 
         int roundedDays = Math.round(days);
         return roundedDays;
+    }
+
+    @Override
+    public String getSoDienThoai() {
+        // TODO Auto-generated method stub
+        return super.getSoDienThoai();
+    }
+
+    @Override
+    public void setSoDienThoai(String soDienThoai) {
+        // TODO Auto-generated method stub
+        super.setSoDienThoai(soDienThoai);
+    }
+
+    @Override
+    public String getLoaiPhong() {
+        // TODO Auto-generated method stub
+        return super.getLoaiPhong();
+    }
+
+    @Override
+    public void setLoaiPhong(String loaiPhong) {
+        // TODO Auto-generated method stub
+        super.setLoaiPhong(loaiPhong);
+    }
+
+    @Override
+    public String unitCost() {
+        double cost = getSoNgay() * getDonGia();
+        if (getSoNgay() > 7) {
+            cost -= cost * 0.2; // Giảm 20% đơn giá cho những ngày còn lại
+        }
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedCost = decimalFormat.format(cost);
+
+        return formattedCost;
     }
 
 }

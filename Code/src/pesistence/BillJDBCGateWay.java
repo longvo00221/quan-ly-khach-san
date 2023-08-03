@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,17 +39,18 @@ public class BillJDBCGateWay implements BillGateWay {
             System.out.println("Phòng đã có hóa đơn!");
             return;
         } else {
-            String insertQuery = "INSERT INTO HoaDon (SoPhong, TenKhachHang, NgayNhanPhong, NgayTraPhong, LoaiHoaDon, Thang, DonGia, PhongId)"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO HoaDon (SoPhong, TenKhachHang, SoDienThoai, NgayNhanPhong, NgayTraPhong, LoaiHoaDon, Thang, DonGia, PhongId)"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
                 statement.setInt(1, bill.getSoPhong());
                 statement.setString(2, bill.getTenKhachHang());
-                statement.setDate(3, bill.getNgayNhanPhong());
-                statement.setDate(4, bill.getNgayTraPhong());
-                statement.setBoolean(5, bill.getLoaiHoaDon());
-                statement.setInt(6, bill.getThang());
-                statement.setInt(7, bill.getDonGia());
-                statement.setInt(8, bill.getPhongID());
+                statement.setString(3, bill.getSoDienThoai());
+                statement.setTimestamp(4, bill.getNgayNhanPhong());
+                statement.setTimestamp(5, bill.getNgayTraPhong());
+                statement.setBoolean(6, bill.getLoaiHoaDon());
+                statement.setInt(7, bill.getThang());
+                statement.setDouble(8, bill.getDonGia());
+                statement.setInt(9, bill.getPhongID());
 
                 statement.executeUpdate();
                 System.out.println("Thêm bill thành công!");
@@ -65,7 +67,7 @@ public class BillJDBCGateWay implements BillGateWay {
 
     @Override
     public void updateBill(Bill bill) {
-        String updateQuery = "UPDATE HoaDon SET SoPhong = ?, TenKhachHang = ?, NgayNhanPhong = ?, NgayTraPhong = ?, LoaiHoaDon = ?, Thang = ?, DonGia = ? WHERE HoaDonId = ?";
+        String updateQuery = "UPDATE HoaDon SET SoPhong = ?, TenKhachHang = ?, NgayNhanPhong = ?, NgayTraPhong = ?, LoaiHoaDon = ?, Thang = ?, DonGia = ?, SoDienThoai = ? WHERE HoaDonId = ?";
         if (!isBillExists(bill.getHoaDonId())) {
             System.out.println("Hóa đơn không tồn tại!");
             return;
@@ -74,12 +76,14 @@ public class BillJDBCGateWay implements BillGateWay {
         try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.setInt(1, bill.getSoPhong());
             statement.setString(2, bill.getTenKhachHang());
-            statement.setDate(3, bill.getNgayNhanPhong());
-            statement.setDate(4, bill.getNgayTraPhong());
+            statement.setTimestamp(3, bill.getNgayNhanPhong());
+            statement.setTimestamp(4, bill.getNgayTraPhong());
             statement.setBoolean(5, bill.getLoaiHoaDon());
             statement.setInt(6, bill.getThang());
-            statement.setInt(7, bill.getDonGia());
-            statement.setInt(8, bill.getHoaDonId());
+            statement.setDouble(7, bill.getDonGia());
+            statement.setString(8, bill.getSoDienThoai());
+            statement.setInt(9, bill.getHoaDonId());
+
             statement.executeUpdate();
             System.out.println("Cập nhật hóa đơn thành công!");
         } catch (Exception e) {
@@ -106,45 +110,56 @@ public class BillJDBCGateWay implements BillGateWay {
     }
 
     @Override
-    public Bill findBill(int billId) {
-        String findQuery = "Select * from HoaDon WHERE HoaDonId= ?";
+    public List<Bill> findBill(String name) {
+        List<Bill> allBills = new ArrayList<>();
+        String findQuery = "SELECT hd.*, p.LoaiPhong FROM HoaDon hd " +
+                "JOIN Phong p ON hd.PhongId = p.PhongId " + "WHERE LOWER(TenKhachHang) LIKE ?";
+        String normalizedSearchName = normalizeString(name);
+
         try (PreparedStatement statement = connection.prepareStatement(findQuery)) {
-            statement.setInt(1, billId);
+
+            statement.setString(1, "%" + normalizedSearchName + "%");
+
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     boolean loaiHoaDon = resultSet.getBoolean("LoaiHoaDon");
-                    System.out.println("hi");
+
                     if (loaiHoaDon) {
                         DayBill dayBill = new DayBill();
-                        dayBill.setNgayNhanPhong(resultSet.getDate("NgayNhanPhong"));
-                        dayBill.setNgayTraPhong(resultSet.getDate("NgayTraPhong"));
+                        dayBill.setNgayNhanPhong(resultSet.getTimestamp("NgayNhanPhong"));
+                        dayBill.setNgayTraPhong(resultSet.getTimestamp("NgayTraPhong"));
+                        dayBill.setLoaiPhong(resultSet.getString("LoaiPhong"));
 
                         dayBill.setSoNgay(dayBill.calculateDuration());
-                        dayBill.setHoaDonId(billId);
+                        dayBill.setHoaDonId(resultSet.getInt("HoaDonId"));
                         dayBill.setSoPhong(resultSet.getInt("SoPhong"));
                         dayBill.setTenKhachHang(resultSet.getString("TenKhachHang"));
                         dayBill.setLoaiHoaDon(loaiHoaDon);
                         dayBill.setThang(resultSet.getInt("Thang"));
                         dayBill.setDonGia(resultSet.getInt("DonGia"));
                         dayBill.setPhongID(resultSet.getInt("PhongId"));
-                        return dayBill;
+                        dayBill.setSoDienThoai(resultSet.getString("SoDienThoai"));
+                        allBills.add(dayBill);
                     } else {
                         HourBill hourBill = new HourBill();
-                        hourBill.setNgayNhanPhong(resultSet.getDate("NgayNhanPhong"));
-                        hourBill.setNgayTraPhong(resultSet.getDate("NgayTraPhong"));
+                        hourBill.setNgayNhanPhong(resultSet.getTimestamp("NgayNhanPhong"));
+                        hourBill.setNgayTraPhong(resultSet.getTimestamp("NgayTraPhong"));
                         hourBill.setSoGio(hourBill.calculateDuration());
-                        hourBill.setHoaDonId(billId);
+                        hourBill.setHoaDonId(resultSet.getInt("HoaDonId"));
                         hourBill.setSoPhong(resultSet.getInt("SoPhong"));
                         hourBill.setTenKhachHang(resultSet.getString("TenKhachHang"));
-
+                        hourBill.setLoaiPhong(resultSet.getString("LoaiPhong"));
                         hourBill.setLoaiHoaDon(loaiHoaDon);
                         hourBill.setThang(resultSet.getInt("Thang"));
                         hourBill.setDonGia(resultSet.getInt("DonGia"));
                         hourBill.setPhongID(resultSet.getInt("PhongId"));
-                        return hourBill;
+                        hourBill.setSoDienThoai(resultSet.getString("SoDienThoai"));
+
+                        allBills.add(hourBill);
                     }
 
                 }
+
             } catch (Exception e) {
                 System.err.println(e);
             }
@@ -152,38 +167,107 @@ public class BillJDBCGateWay implements BillGateWay {
             System.out.println("Lỗi tìm kiếm");
 
         }
-        return null;
+        return allBills;
     }
 
     @Override
-    public void totalByTypeOfBill(boolean typeBill) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'totalByTypeOfBill'");
+    public int totalByTypeOfBill(boolean loaiHoaDon, Date startDate, Date endDate) {
+        String countQuery = "SELECT COUNT(*) FROM HoaDon WHERE LoaiHoaDon = ? AND NgayTraPhong BETWEEN ? AND ?";
+        try (PreparedStatement statement = connection.prepareStatement(countQuery)) {
+            statement.setBoolean(1, loaiHoaDon);
+            statement.setTimestamp(2, new Timestamp(startDate.getTime()));
+            statement.setTimestamp(3, new Timestamp(endDate.getTime()));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return 0;
     }
 
     @Override
-    public void averageMonthlyIncome(int month) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'averageMonthlyIncome'");
+    public List<Bill> averageMonthlyIncome(Date startDate, Date endDate) {
+        List<Bill> allBills = new ArrayList<>();
+        String query = "SELECT * FROM HoaDon WHERE NgayTraPhong BETWEEN ? AND ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setTimestamp(1, new Timestamp(startDate.getTime()));
+            statement.setTimestamp(2, new Timestamp(endDate.getTime()));
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int hoaDonId = resultSet.getInt("HoaDonId");
+                    int soPhong = resultSet.getInt("SoPhong");
+                    String tenKhachHang = resultSet.getString("TenKhachHang");
+                    Timestamp ngayNhanPhong = resultSet.getTimestamp("NgayNhanPhong");
+                    Timestamp ngayTraPhong = resultSet.getTimestamp("NgayTraPhong");
+                    boolean loaiHoaDon = resultSet.getBoolean("LoaiHoaDon");
+                    int thang = resultSet.getInt("Thang");
+                    int donGia = resultSet.getInt("DonGia");
+                    int phongID = resultSet.getInt("PhongId");
+                    String soDienThoai = resultSet.getString("SoDienThoai");
+
+                    Bill bill;
+
+                    if (loaiHoaDon) {
+                        // Nếu là DayBill thì lấy số ngày
+                        bill = new DayBill();
+                        ((DayBill) bill).setNgayNhanPhong(ngayNhanPhong);
+                        ((DayBill) bill).setNgayTraPhong(ngayTraPhong);
+                        int soNgay = ((DayBill) bill).calculateDuration();
+                        ((DayBill) bill).setSoNgay(soNgay);
+
+                    } else {
+                        // Nếu là HourBill thì lấy số giờ
+                        bill = new HourBill();
+                        ((HourBill) bill).setNgayNhanPhong(ngayNhanPhong);
+                        ((HourBill) bill).setNgayTraPhong(ngayTraPhong);
+                        int soGio = ((HourBill) bill).calculateDuration();
+                        ((HourBill) bill).setSoGio(soGio);
+                    }
+
+                    bill.setHoaDonId(hoaDonId);
+                    bill.setSoPhong(soPhong);
+                    bill.setTenKhachHang(tenKhachHang);
+                    bill.setLoaiHoaDon(loaiHoaDon);
+                    bill.setThang(thang);
+                    bill.setDonGia(donGia);
+                    bill.setPhongID(phongID);
+                    bill.setSoDienThoai(soDienThoai);
+
+                    allBills.add(bill);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allBills;
     }
 
     @Override
     public List<Bill> getAllBill() {
         List<Bill> allBills = new ArrayList<>();
-        String selectQuery = "SELECT * FROM HoaDon";
+        String selectQuery = "SELECT hd.*, p.LoaiPhong FROM HoaDon hd " +
+                "JOIN Phong p ON hd.PhongId = p.PhongId";
         try (PreparedStatement statement = connection.prepareStatement(selectQuery);
                 ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
                 int hoaDonId = resultSet.getInt("HoaDonId");
                 int soPhong = resultSet.getInt("SoPhong");
+                String loaiPhong = resultSet.getString("LoaiPhong");
                 String tenKhachHang = resultSet.getString("TenKhachHang");
-                Date ngayNhanPhong = resultSet.getDate("NgayNhanPhong");
-                Date ngayTraPhong = resultSet.getDate("NgayTraPhong");
+                Timestamp ngayNhanPhong = resultSet.getTimestamp("NgayNhanPhong");
+                Timestamp ngayTraPhong = resultSet.getTimestamp("NgayTraPhong");
                 boolean loaiHoaDon = resultSet.getBoolean("LoaiHoaDon");
                 int thang = resultSet.getInt("Thang");
                 int donGia = resultSet.getInt("DonGia");
                 int phongID = resultSet.getInt("PhongId");
+                String soDienThoai = resultSet.getString("SoDienThoai");
 
                 Bill bill;
 
@@ -211,6 +295,8 @@ public class BillJDBCGateWay implements BillGateWay {
                 bill.setThang(thang);
                 bill.setDonGia(donGia);
                 bill.setPhongID(phongID);
+                bill.setLoaiPhong(loaiPhong);
+                bill.setSoDienThoai(soDienThoai);
 
                 allBills.add(bill);
             }
@@ -269,6 +355,12 @@ public class BillJDBCGateWay implements BillGateWay {
             System.out.println("Lỗi khi kiểm tra tồn tại hóa đơn!");
         }
         return false;
+    }
+
+    @Override
+    public String normalizeString(String name) {
+        String normalized = name.replaceAll("[^\\p{ASCII}]", "").toLowerCase();
+        return normalized;
     }
 
 }

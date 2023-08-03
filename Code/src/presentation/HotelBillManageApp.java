@@ -3,6 +3,9 @@ package presentation;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import domain.BillService;
+import domain.BillServiceImpl;
+import domain.model.Bill;
 import presentation.Command.AddCommand;
 import presentation.Command.AverageCommand;
 import presentation.Command.CountCommand;
@@ -12,9 +15,12 @@ import presentation.Command.FindCommand;
 import presentation.Invoker.Invoker;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.List;
+
+import java.awt.event.*;
+import java.sql.Date;
 
 public class HotelBillManageApp extends JFrame {
     private DefaultTableModel tableModel;
@@ -25,27 +31,28 @@ public class HotelBillManageApp extends JFrame {
     private JButton findButton;
     private JButton saveButton;
     private JTextField sophongTextField;
-    private JTextField loaiphongTextField;
     private JTextField tenkhachhangTextField;
     private JTextField thoigiannhanphongTextField;
     private JTextField thoigiantraphongTextField;
     private JTextField loaihoadonTextField;
     private JTextField thangTextField;
     private JTextField dongiaTextField;
-    private JTextField phongTextField;
     private JTextField sodienthoaiTextField;
 
+    private BillService billService;
+
     private Invoker invoker;
-   
-    
+    private int hoaDonId;
 
     public HotelBillManageApp() {
+
+        billService = new BillServiceImpl();
+        invoker = new Invoker();
+
         setTitle("Hotel Bill Management");
         setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
-        
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
@@ -59,16 +66,51 @@ public class HotelBillManageApp extends JFrame {
         tableModel.addColumn("Thời gian trả phòng");
         tableModel.addColumn("Loại hóa đơn");
         tableModel.addColumn("Đơn giá");
+        tableModel.addColumn("Thành tiền");
+
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int selectedRow = table.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        hoaDonId = (int) table.getValueAt(selectedRow, 0);
+                        String tenKhachHang = table.getValueAt(selectedRow, 3).toString();
+                        String soDienThoai = table.getValueAt(selectedRow, 4).toString();
+                        String soPhong = table.getValueAt(selectedRow, 5).toString();
+                        String thang = table.getValueAt(selectedRow, 6).toString();
+                        String thoiGianNhan = table.getValueAt(selectedRow, 7).toString();
+                        String thoiGianTra = table.getValueAt(selectedRow, 8).toString();
+                        String loaiHoaDon = table.getValueAt(selectedRow, 9).toString();
+                        String donGia = table.getValueAt(selectedRow, 10).toString();
+
+                        sophongTextField.setText(soPhong);
+                        sodienthoaiTextField.setText(soDienThoai);
+                        tenkhachhangTextField.setText(tenKhachHang);
+                        thoigiannhanphongTextField.setText(thoiGianNhan);
+                        thoigiantraphongTextField.setText(thoiGianTra);
+                        loaihoadonTextField.setText(loaiHoaDon);
+                        thangTextField.setText(thang);
+                        dongiaTextField.setText(donGia);
+                        sodienthoaiTextField.setText(soDienThoai);
+
+                    }
+                }
+            }
+        });
+
         // Create the first menu - Main
         JMenu mainMenu = new JMenu("Main");
         JMenuItem countMenuItem = new JMenuItem("Count");
         JMenuItem averageMenuItem = new JMenuItem("Average");
+        JMenuItem billListItem = new JMenuItem("BillList");
         menuBar.add(mainMenu);
+        mainMenu.add(billListItem);
         mainMenu.add(countMenuItem);
         mainMenu.add(averageMenuItem);
         add(scrollPane, BorderLayout.CENTER);
@@ -82,8 +124,6 @@ public class HotelBillManageApp extends JFrame {
         loaihoadonTextField = new JTextField();
         thangTextField = new JTextField();
         dongiaTextField = new JTextField();
-        phongTextField = new JTextField();
-        loaiphongTextField = new JTextField();
         sodienthoaiTextField = new JTextField();
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
@@ -93,8 +133,6 @@ public class HotelBillManageApp extends JFrame {
         inputPanel.add(tenkhachhangTextField);
         inputPanel.add(new JLabel("Số phòng:"));
         inputPanel.add(sophongTextField);
-        inputPanel.add(new JLabel("Loại Phòng:"));
-        inputPanel.add(loaiphongTextField);
         inputPanel.add(new JLabel("Số điên thoại:"));
         inputPanel.add(sodienthoaiTextField);
         inputPanel.add(new JLabel("Loại hóa đơn:"));
@@ -116,7 +154,13 @@ public class HotelBillManageApp extends JFrame {
         mainInputPanel.add(buttonsPanel, BorderLayout.SOUTH);
         add(mainInputPanel, BorderLayout.SOUTH);
 
-        // Add action listeners for buttons
+        billListItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTableData();
+            }
+        });
+
         countMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -131,19 +175,35 @@ public class HotelBillManageApp extends JFrame {
         });
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                AddCommand addCommand = new AddCommand();
+                AddCommand addCommand = new AddCommand(sophongTextField, tenkhachhangTextField,
+                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonTextField, thangTextField,
+                        dongiaTextField, sodienthoaiTextField, billService);
+                invoker.addToQueue(addCommand);
+                invoker.executeCommands();
+                updateTableData();
+
                 clearFields();
             }
         });
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                EditCommand editCommand = new EditCommand();
+                EditCommand editCommand = new EditCommand(hoaDonId, sophongTextField, tenkhachhangTextField,
+                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonTextField, thangTextField,
+                        dongiaTextField, sodienthoaiTextField, billService);
+                invoker.addToQueue(editCommand);
+                invoker.executeCommands();
+
+                updateTableData();
+
                 clearFields();
             }
         });
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                DeleteCommand deleteCommand = new DeleteCommand();
+                DeleteCommand deleteCommand = new DeleteCommand(hoaDonId, billService);
+                invoker.addToQueue(deleteCommand);
+                invoker.executeCommands();
+                updateTableData();
                 clearFields();
             }
         });
@@ -153,43 +213,46 @@ public class HotelBillManageApp extends JFrame {
             }
         });
 
+        updateTableData();
+
     }
+
     private void showFindDialog() {
         // Tạo dialog
         JDialog findDialog = new JDialog(this, "Tìm kiếm khách hàng");
         findDialog.setSize(300, 70);
         findDialog.setLayout(new GridLayout(1, 2));
-        
+
         // Tạo components cho dialog
         JLabel nameLabel = new JLabel("Tên khách hàng:");
         JTextField searchTextField = new JTextField();
 
-    
-        findDialog.add(nameLabel,BorderLayout.SOUTH);
-        findDialog.add(searchTextField,BorderLayout.SOUTH);
-
+        findDialog.add(nameLabel, BorderLayout.SOUTH);
+        findDialog.add(searchTextField, BorderLayout.SOUTH);
 
         searchTextField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String searchName = searchTextField.getText();
-                FindCommand findCommand = new FindCommand();
+                FindCommand findCommand = new FindCommand(searchName, billService, tableModel);
+                invoker.addToQueue(findCommand);
+                invoker.executeCommands();
             }
         });
-    
+
         findDialog.setVisible(true);
     }
-    
+
     private void showCountDialogCount() {
         // Create the count dialog
         JDialog countDialog = new JDialog(this, "Tính số lượng hóa đơn");
         countDialog.setSize(300, 150);
         countDialog.setLayout(new GridLayout(4, 2));
         // Create components for the dialog
-        String[] invoiceTypes = { "Theo giờ", "Theo Ngày" };
-        String[] months = { "tháng 1", "tháng 2", "tháng 3", "tháng 4", "tháng 5", "tháng 6", "tháng 7",
-                "tháng 8",
-                "tháng 9", "tháng 10", "tháng 11", "tháng 12" };
+        String[] invoiceTypes = { "Theo giờ", "Theo ngày" };
+        String[] months = { "1", "2", "3", "4", "5", "6", "7",
+                "8",
+                "9", "10", "11", "12" };
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         String[] years = new String[currentYear - 1999];
         for (int i = 0; i < years.length; i++) {
@@ -214,24 +277,32 @@ public class HotelBillManageApp extends JFrame {
         countButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CountCommand countCommand = new CountCommand();
-                String selectedInvoiceType = (String) invoiceTypeComboBox.getSelectedItem();
+
+                int selectedIndex = invoiceTypeComboBox.getSelectedIndex();
+                boolean selectedInvoiceType = selectedIndex == 1;
+
                 String selectedMonth = (String) monthComboBox.getSelectedItem();
-        
-                resultLabel.setText("10");
+                String selectedYear = (String) yearComboBox.getSelectedItem();
+
+                CountCommand countCommand = new CountCommand(selectedInvoiceType, selectedMonth, selectedYear,
+                        billService, resultLabel);
+                invoker.addToQueue(countCommand);
+                invoker.executeCommands();
+
             }
         });
 
         countDialog.setVisible(true);
     }
+
     private void showCountDialogAverage() {
         // Create the count dialog
         JDialog countDialog = new JDialog(this, "Tính thành tiền trung bình");
         countDialog.setSize(300, 150);
         countDialog.setLayout(new GridLayout(4, 2));
-        String[] months = { "tháng 1", "tháng 2", "tháng 3", "tháng 4", "tháng 5", "tháng 6", "tháng 7",
-                "tháng 8",
-                "tháng 9", "tháng 10", "tháng 11", "tháng 12" };
+        String[] months = { "1", "2", "3", "4", "5", "6", "7",
+                "8",
+                "9", "10", "11", "12" };
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         String[] years = new String[currentYear - 1999];
         for (int i = 0; i < years.length; i++) {
@@ -252,25 +323,57 @@ public class HotelBillManageApp extends JFrame {
         averageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AverageCommand averageCommand = new AverageCommand();
-                 resultLabel.setText("100.000d");
+                String selectedMonth = (String) monthComboBox.getSelectedItem();
+                String selectedYear = (String) yearComboBox.getSelectedItem();
+                AverageCommand averageCommand = new AverageCommand(selectedMonth, selectedYear,
+                        billService, resultLabel);
+                invoker.addToQueue(averageCommand);
+                invoker.executeCommands();
             }
         });
 
         countDialog.setVisible(true);
     }
 
+    private void updateTableData() {
+
+        List<Bill> billList = billService.getAllBill();
+
+        // Xóa toàn bộ dữ liệu cũ trên bảng
+        tableModel.setRowCount(0);
+
+        // Đổ dữ liệu mới vào bảng
+        for (Bill bill : billList) {
+            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+            String donGia = decimalFormat.format(bill.getDonGia());
+            Object[] rowData = {
+                    bill.getHoaDonId(),
+                    bill.getSoPhong(),
+                    bill.getLoaiPhong(),
+                    bill.getTenKhachHang(),
+                    bill.getSoDienThoai(),
+                    bill.getSoPhong(),
+                    bill.getThang(),
+                    bill.getNgayNhanPhong(),
+                    bill.getNgayTraPhong(),
+                    bill.getLoaiHoaDon(),
+                    donGia,
+                    bill.unitCost(),
+
+            };
+            tableModel.addRow(rowData);
+        }
+    }
+
     private void clearFields() {
 
         sophongTextField.setText("");
-        loaiphongTextField.setText("");
         tenkhachhangTextField.setText("");
         thoigiannhanphongTextField.setText("");
         thoigiantraphongTextField.setText("");
         loaihoadonTextField.setText("");
         thangTextField.setText("");
         dongiaTextField.setText("");
-        phongTextField.setText("");
         sodienthoaiTextField.setText("");
     }
 

@@ -1,17 +1,20 @@
 package domain.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public abstract class Bill {
     private int hoaDonId;
     private int soPhong;
     private String tenKhachHang;
-    private Date ngayNhanPhong;
-    private Date ngayTraPhong;
+    private String soDienThoai;
+    private Timestamp ngayNhanPhong;
+    private Timestamp ngayTraPhong;
     private Boolean loaiHoaDon;
     private int thang;
-    private int donGia;
+    private double donGia;
     private int phongID;
+    private String loaiPhong;
 
     public int getSoPhong() {
         return soPhong;
@@ -29,19 +32,19 @@ public abstract class Bill {
         this.tenKhachHang = tenKhachHang;
     }
 
-    public Date getNgayNhanPhong() {
+    public Timestamp getNgayNhanPhong() {
         return ngayNhanPhong;
     }
 
-    public void setNgayNhanPhong(Date ngayNhanPhong) {
+    public void setNgayNhanPhong(Timestamp ngayNhanPhong) {
         this.ngayNhanPhong = ngayNhanPhong;
     }
 
-    public Date getNgayTraPhong() {
+    public Timestamp getNgayTraPhong() {
         return ngayTraPhong;
     }
 
-    public void setNgayTraPhong(Date ngayTraPhong) {
+    public void setNgayTraPhong(Timestamp ngayTraPhong) {
         this.ngayTraPhong = ngayTraPhong;
     }
 
@@ -61,11 +64,11 @@ public abstract class Bill {
         this.thang = thang;
     }
 
-    public int getDonGia() {
+    public double getDonGia() {
         return donGia;
     }
 
-    public void setDonGia(int donGia) {
+    public void setDonGia(double donGia) {
         this.donGia = donGia;
     }
 
@@ -84,6 +87,24 @@ public abstract class Bill {
     public void setHoaDonId(int hoaDonId) {
         this.hoaDonId = hoaDonId;
     }
+
+    public String getSoDienThoai() {
+        return soDienThoai;
+    }
+
+    public void setSoDienThoai(String soDienThoai) {
+        this.soDienThoai = soDienThoai;
+    }
+
+    public String getLoaiPhong() {
+        return loaiPhong;
+    }
+
+    public void setLoaiPhong(String loaiPhong) {
+        this.loaiPhong = loaiPhong;
+    }
+
+    public abstract String unitCost();
 
     public abstract int calculateDuration();
 

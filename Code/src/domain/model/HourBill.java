@@ -1,12 +1,14 @@
 package domain.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
 
 public class HourBill extends Bill {
     private int soGio;
 
     @Override
-    public int getDonGia() {
+    public double getDonGia() {
         // TODO Auto-generated method stub
         return super.getDonGia();
     }
@@ -24,13 +26,13 @@ public class HourBill extends Bill {
     }
 
     @Override
-    public Date getNgayNhanPhong() {
+    public Timestamp getNgayNhanPhong() {
         // TODO Auto-generated method stub
         return super.getNgayNhanPhong();
     }
 
     @Override
-    public Date getNgayTraPhong() {
+    public Timestamp getNgayTraPhong() {
         // TODO Auto-generated method stub
         return super.getNgayTraPhong();
     }
@@ -60,7 +62,7 @@ public class HourBill extends Bill {
     }
 
     @Override
-    public void setDonGia(int donGia) {
+    public void setDonGia(double donGia) {
         // TODO Auto-generated method stub
         super.setDonGia(donGia);
     }
@@ -78,13 +80,13 @@ public class HourBill extends Bill {
     }
 
     @Override
-    public void setNgayNhanPhong(Date ngayNhanPhong) {
+    public void setNgayNhanPhong(Timestamp ngayNhanPhong) {
         // TODO Auto-generated method stub
         super.setNgayNhanPhong(ngayNhanPhong);
     }
 
     @Override
-    public void setNgayTraPhong(Date ngayTraPhong) {
+    public void setNgayTraPhong(Timestamp ngayTraPhong) {
         // TODO Auto-generated method stub
         super.setNgayTraPhong(ngayTraPhong);
     }
@@ -130,6 +132,46 @@ public class HourBill extends Bill {
         int roundedHours = Math.round(hours);
 
         return roundedHours;
+    }
+
+    @Override
+    public String getSoDienThoai() {
+        // TODO Auto-generated method stub
+        return super.getSoDienThoai();
+    }
+
+    @Override
+    public void setSoDienThoai(String soDienThoai) {
+        // TODO Auto-generated method stub
+        super.setSoDienThoai(soDienThoai);
+    }
+
+    @Override
+    public String getLoaiPhong() {
+        // TODO Auto-generated method stub
+        return super.getLoaiPhong();
+    }
+
+    @Override
+    public void setLoaiPhong(String loaiPhong) {
+        // TODO Auto-generated method stub
+        super.setLoaiPhong(loaiPhong);
+    }
+
+    @Override
+    public String unitCost() {
+        double cost = 0;
+        int totalHours = calculateDuration();
+
+        if (totalHours <= 24) {
+            cost = totalHours * getDonGia();
+        } else if (totalHours > 24 && totalHours < 30 * 24) {
+            cost = 24 * getDonGia();
+        }
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedCost = decimalFormat.format(cost);
+        return formattedCost;
     }
 
 }

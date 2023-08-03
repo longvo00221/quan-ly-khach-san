@@ -10,11 +10,11 @@ import presentation.HotelBillManageApp;
 
 public class app {
     public static void main(String[] args) {
-        // SwingUtilities.invokeLater(new Runnable() {
-        // public void run() {
-        // new HotelBillManageApp().setVisible(true);
-        // }
-        // });
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new HotelBillManageApp().setVisible(true);
+            }
+        });
         // Bill newBill = new Bill();
         // newBill.setSoPhong(2);
         // newBill.setTenKhachHang("Nguyen Van b");
@@ -25,22 +25,23 @@ public class app {
         // newBill.setDonGia(1500000);
         // newBill.setPhongID(2);
 
-        BillJDBCGateWay billGateWay = new BillJDBCGateWay();
-        Bill bill = billGateWay.findBill(1);
+        // BillJDBCGateWay billGateWay = new BillJDBCGateWay();
+        // Bill bill = billGateWay.findBill(1);
         // List<Bill> allBills = billGateWay.getAllBill();
 
         // for (Bill bill : allBills) {
-        System.out.println("HoaDonId: " + bill.getHoaDonId());
-        System.out.println("SoPhong: " + bill.getSoPhong());
+        // System.out.println("HoaDonId: " + bill.getHoaDonId());
+        // System.out.println("SoPhong: " + bill.getSoPhong());
 
-        System.out.println("TenKhachHang: " + bill.getTenKhachHang());
-        System.out.println("NgayNhanPhong: " + bill.getNgayNhanPhong());
-        System.out.println("NgayTraPhong: " + bill.getNgayTraPhong());
-        System.out.println("LoaiHoaDon: " + bill.getLoaiHoaDon());
-        System.out.println("Thang: " + bill.getThang());
-        System.out.println("DonGia: " + bill.getDonGia());
-        System.out.println("PhongId: " + bill.getPhongID());
-        System.out.println("-------------------------");
+        // System.out.println("TenKhachHang: " + bill.getTenKhachHang());
+        // System.out.println("NgayNhanPhong: " + bill.getNgayNhanPhong());
+        // System.out.println("NgayTraPhong: " + bill.getNgayTraPhong());
+        // System.out.println("LoaiHoaDon: " + bill.getLoaiHoaDon());
+        // System.out.println("Thang: " + bill.getThang());
+        // System.out.println("DonGia: " + bill.getDonGia());
+        // System.out.println("PhongId: " + bill.getPhongID());
+        // System.out.println("LoaiPhong: " + bill.getLoaiPhong());
+        // System.out.println("-------------------------");
         // }
 
     }

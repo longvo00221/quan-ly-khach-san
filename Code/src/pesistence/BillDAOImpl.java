@@ -1,5 +1,6 @@
 package pesistence;
 
+import java.sql.Date;
 import java.util.List;
 
 import domain.model.Bill;
@@ -28,20 +29,20 @@ public class BillDAOImpl implements BillDAO {
     }
 
     @Override
-    public Bill findBill(int billId) {
-        return this.billGateWay.findBill(billId);
+    public List<Bill> findBill(String name) {
+        return this.billGateWay.findBill(name);
 
     }
 
     @Override
-    public void totalByTypeOfBill(boolean typeBill) {
-        this.billGateWay.totalByTypeOfBill(typeBill);
+    public int totalByTypeOfBill(boolean loaiHoaDon, Date startDate, Date endDate) {
+        return this.billGateWay.totalByTypeOfBill(loaiHoaDon, startDate, endDate);
 
     }
 
     @Override
-    public void averageMonthlyIncome(int month) {
-        this.billGateWay.averageMonthlyIncome(month);
+    public List<Bill> averageMonthlyIncome(Date startDate, Date endDate) {
+        return this.billGateWay.averageMonthlyIncome(startDate, endDate);
 
     }
 
@@ -63,6 +64,11 @@ public class BillDAOImpl implements BillDAO {
     @Override
     public boolean isBillExists(int billId) {
         return this.billGateWay.isBillExists(billId);
+    }
+
+    @Override
+    public String normalizeString(String name) {
+        return this.billGateWay.normalizeString(name);
     }
 
 }

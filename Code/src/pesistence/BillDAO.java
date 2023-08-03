@@ -1,5 +1,6 @@
 package pesistence;
 
+import java.sql.Date;
 import java.util.List;
 
 import domain.model.Bill;
@@ -12,13 +13,15 @@ public interface BillDAO {
 
     void deleteBill(int billId);
 
-    Bill findBill(int billId);
+    List<Bill> findBill(String name);
 
-    void totalByTypeOfBill(boolean typeBill);
+    int totalByTypeOfBill(boolean loaiHoaDon, Date startDate, Date endDate);
 
-    void averageMonthlyIncome(int month);
+    List<Bill> averageMonthlyIncome(Date startDate, Date endDate);
 
     boolean isBillExists(int billId);
+
+    String normalizeString(String name);
 
     List<Bill> getAllBill();
 
