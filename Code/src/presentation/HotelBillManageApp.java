@@ -38,6 +38,7 @@ public class HotelBillManageApp extends JFrame {
     private JTextField thangTextField;
     private JTextField dongiaTextField;
     private JTextField sodienthoaiTextField;
+    private JComboBox loaihoadonComboBox;
 
     private BillService billService;
 
@@ -91,12 +92,17 @@ public class HotelBillManageApp extends JFrame {
                         String loaiHoaDon = table.getValueAt(selectedRow, 9).toString();
                         String donGia = table.getValueAt(selectedRow, 10).toString();
 
+                        if (loaiHoaDon == "Giờ") {
+                            loaihoadonComboBox.setSelectedIndex(0);
+                        } else {
+                            loaihoadonComboBox.setSelectedIndex(1);
+                        }
                         sophongTextField.setText(soPhong);
                         sodienthoaiTextField.setText(soDienThoai);
                         tenkhachhangTextField.setText(tenKhachHang);
                         thoigiannhanphongTextField.setText(thoiGianNhan);
                         thoigiantraphongTextField.setText(thoiGianTra);
-                        loaihoadonTextField.setText(loaiHoaDon);
+
                         thangTextField.setText(thang);
                         dongiaTextField.setText(donGia);
                         sodienthoaiTextField.setText(soDienThoai);
@@ -119,7 +125,6 @@ public class HotelBillManageApp extends JFrame {
 
         JPanel inputPanel = new JPanel(new GridLayout(9, 3));
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
-        String[] billTypes = { "Ngày", "Giờ" };
 
         sophongTextField = new JTextField();
         tenkhachhangTextField = new JTextField();
@@ -129,7 +134,8 @@ public class HotelBillManageApp extends JFrame {
         thangTextField = new JTextField();
         dongiaTextField = new JTextField();
         sodienthoaiTextField = new JTextField();
-        JComboBox<String> billTypesComboBox = new JComboBox<>(billTypes);
+        String[] invoiceTypes = { "Giờ", "Ngày" };
+        loaihoadonComboBox = new JComboBox<>(invoiceTypes);
 
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
@@ -144,7 +150,7 @@ public class HotelBillManageApp extends JFrame {
         inputPanel.add(new JLabel("Số điên thoại:"));
         inputPanel.add(sodienthoaiTextField);
         inputPanel.add(new JLabel("Loại hóa đơn:"));
-        inputPanel.add(loaihoadonTextField);
+        inputPanel.add(loaihoadonComboBox);
         inputPanel.add(new JLabel("Tháng:"));
         inputPanel.add(thangTextField);
         inputPanel.add(new JLabel("Đơn giá:"));
@@ -184,8 +190,9 @@ public class HotelBillManageApp extends JFrame {
         });
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 AddCommand addCommand = new AddCommand(sophongTextField, tenkhachhangTextField,
-                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonTextField, thangTextField,
+                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox, thangTextField,
                         dongiaTextField, sodienthoaiTextField, billService);
                 invoker.addToQueue(addCommand);
                 invoker.executeCommands();
@@ -197,7 +204,7 @@ public class HotelBillManageApp extends JFrame {
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 EditCommand editCommand = new EditCommand(hoaDonId, sophongTextField, tenkhachhangTextField,
-                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonTextField, thangTextField,
+                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox, thangTextField,
                         dongiaTextField, sodienthoaiTextField, billService);
                 invoker.addToQueue(editCommand);
                 invoker.executeCommands();
@@ -364,6 +371,12 @@ public class HotelBillManageApp extends JFrame {
         for (Bill bill : billList) {
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String donGia = decimalFormat.format(bill.getDonGia());
+            String loaiHoaDon = "";
+            if (bill.getLoaiHoaDon()) {
+                loaiHoaDon = "Ngày";
+            } else {
+                loaiHoaDon = "Giờ";
+            }
             Object[] rowData = {
                     bill.getHoaDonId(),
                     bill.getSoPhong(),
@@ -374,7 +387,7 @@ public class HotelBillManageApp extends JFrame {
                     bill.getThang(),
                     bill.getNgayNhanPhong(),
                     bill.getNgayTraPhong(),
-                    bill.getLoaiHoaDon(),
+                    loaiHoaDon,
                     donGia,
                     bill.unitCost(),
 

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import domain.BillService;
@@ -17,13 +18,13 @@ public class AddCommand implements Command {
     private JTextField soDienThoaiTextField;
     private JTextField thoiGianNhanPhongTextField;
     private JTextField thoiGianTraPhongTextField;
-    private JTextField loaiHoaDonTextField;
+    private JComboBox loaihoadonComboBox;
     private JTextField thangTextField;
     private JTextField donGiaTextField;
     private BillService billService;
 
     public AddCommand(JTextField soPhongTextField, JTextField tenKhachTextField, JTextField thoiGianNhanPhongTextField,
-            JTextField thoiGianTraPhongTextField, JTextField loaiHoaDonTextField, JTextField thangTextField,
+            JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox, JTextField thangTextField,
             JTextField donGiaTextField,
             JTextField soDienThoaiTextField, BillService billService) {
 
@@ -31,7 +32,7 @@ public class AddCommand implements Command {
         this.tenKhachTextField = tenKhachTextField;
         this.thoiGianNhanPhongTextField = thoiGianNhanPhongTextField;
         this.thoiGianTraPhongTextField = thoiGianTraPhongTextField;
-        this.loaiHoaDonTextField = loaiHoaDonTextField;
+        this.loaihoadonComboBox = loaihoadonComboBox;
         this.thangTextField = thangTextField;
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
@@ -45,10 +46,20 @@ public class AddCommand implements Command {
         String tenKhachHang = tenKhachTextField.getText();
         String thoiGianNhanPhong = thoiGianNhanPhongTextField.getText();
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
-        boolean loaiHoaDon = Boolean.parseBoolean(loaiHoaDonTextField.getText());
+        int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
         int thang = Integer.parseInt(thangTextField.getText());
         double donGia = Double.parseDouble(donGiaTextField.getText());
         String soDienThoai = soDienThoaiTextField.getText();
+        boolean isNgay = false; // Giả sử ban đầu loaiHoaDon là false
+
+        if (selectedTypeBill == 1) {
+            isNgay = true;
+        } else {
+            isNgay = false;
+        }
+
+        System.out.println(selectedTypeBill);
+        System.out.println(isNgay);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date ngayNhanPhong = null;
@@ -64,19 +75,23 @@ public class AddCommand implements Command {
         java.sql.Timestamp sqlNgayNhanPhong = new java.sql.Timestamp(ngayNhanPhong.getTime());
         java.sql.Timestamp sqlNgayTraPhong = new java.sql.Timestamp(ngayTraPhong.getTime());
 
-        if (loaiHoaDon) {
+        if (isNgay) {
             DayBill bill = new DayBill();
             bill.setSoPhong(soPhong);
             bill.setTenKhachHang(tenKhachHang);
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
-            bill.setLoaiHoaDon(loaiHoaDon);
+            bill.setLoaiHoaDon(isNgay);
             bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);
 
-            billService.addBill(bill);
+            try {
+                billService.addBill(bill);
+            } catch (Exception e) {
+                System.out.println(0000000);
+            }
 
         } else {
             HourBill bill = new HourBill();
@@ -84,13 +99,18 @@ public class AddCommand implements Command {
             bill.setTenKhachHang(tenKhachHang);
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
-            bill.setLoaiHoaDon(loaiHoaDon);
+            bill.setLoaiHoaDon(isNgay);
             bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);
 
-            billService.addBill(bill);
+            try {
+                billService.addBill(bill);
+            } catch (Exception e) {
+                System.out.println(0000000);
+            }
+
         }
 
     }

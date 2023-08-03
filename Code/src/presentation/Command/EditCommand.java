@@ -3,6 +3,7 @@ package presentation.Command;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import domain.BillService;
@@ -16,14 +17,15 @@ public class EditCommand implements Command {
     private JTextField soDienThoaiTextField;
     private JTextField thoiGianNhanPhongTextField;
     private JTextField thoiGianTraPhongTextField;
-    private JTextField loaiHoaDonTextField;
+    private JComboBox loaihoadonComboBox;
+
     private JTextField thangTextField;
     private JTextField donGiaTextField;
     private BillService billService;
 
     public EditCommand(int hoaDonId, JTextField soPhongTextField, JTextField tenKhachTextField,
             JTextField thoiGianNhanPhongTextField,
-            JTextField thoiGianTraPhongTextField, JTextField loaiHoaDonTextField, JTextField thangTextField,
+            JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox, JTextField thangTextField,
             JTextField donGiaTextField,
             JTextField soDienThoaiTextField, BillService billService) {
         this.hoaDonId = hoaDonId;
@@ -31,7 +33,7 @@ public class EditCommand implements Command {
         this.tenKhachTextField = tenKhachTextField;
         this.thoiGianNhanPhongTextField = thoiGianNhanPhongTextField;
         this.thoiGianTraPhongTextField = thoiGianTraPhongTextField;
-        this.loaiHoaDonTextField = loaiHoaDonTextField;
+        this.loaihoadonComboBox = loaihoadonComboBox;
         this.thangTextField = thangTextField;
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
@@ -48,11 +50,18 @@ public class EditCommand implements Command {
         String tenKhachHang = tenKhachTextField.getText();
         String thoiGianNhanPhong = thoiGianNhanPhongTextField.getText();
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
-        boolean loaiHoaDon = Boolean.parseBoolean(loaiHoaDonTextField.getText());
+        int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
         int thang = Integer.parseInt(thangTextField.getText());
         double donGia = Double.parseDouble(donGiaTextField.getText().replace(",", ""));
         String soDienThoai = soDienThoaiTextField.getText();
 
+        boolean isNgay = false;
+
+        if (selectedTypeBill == 1) {
+            isNgay = true;
+        } else {
+            isNgay = false;
+        }
         System.out.println(thoiGianNhanPhong);
         System.out.println(thoiGianTraPhong);
 
@@ -75,13 +84,13 @@ public class EditCommand implements Command {
         System.out.println(sqlNgayNhanPhong);
         System.out.println(sqlNgayTraPhong);
 
-        if (loaiHoaDon) {
+        if (isNgay) {
             DayBill bill = new DayBill();
             bill.setSoPhong(soPhong);
             bill.setTenKhachHang(tenKhachHang);
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
-            bill.setLoaiHoaDon(loaiHoaDon);
+            bill.setLoaiHoaDon(isNgay);
             bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
@@ -96,7 +105,7 @@ public class EditCommand implements Command {
             bill.setTenKhachHang(tenKhachHang);
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
-            bill.setLoaiHoaDon(loaiHoaDon);
+            bill.setLoaiHoaDon(isNgay);
             bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
