@@ -23,6 +23,7 @@ public class EditCommand implements Command {
 
     private JTextField donGiaTextField;
     private BillService billService;
+    private boolean isValid;
 
     public EditCommand(int hoaDonId, int phongIdPrevious, JTextField soPhongTextField, JTextField tenKhachTextField,
             JTextField thoiGianNhanPhongTextField,
@@ -39,6 +40,7 @@ public class EditCommand implements Command {
         this.soDienThoaiTextField = soDienThoaiTextField;
         this.billService = billService;
         this.phongIdPrevious = phongIdPrevious;
+        this.isValid = true;
     };
 
     @Override
@@ -46,6 +48,7 @@ public class EditCommand implements Command {
         if (hoaDonId < 0) {
             return;
         }
+        String regex = "(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})";
 
         int soPhong = Integer.parseInt(soPhongTextField.getText());
         int phongId = soPhong;
@@ -55,6 +58,12 @@ public class EditCommand implements Command {
         int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
         double donGia = Double.parseDouble(donGiaTextField.getText().replace(",", ""));
         String soDienThoai = soDienThoaiTextField.getText();
+
+        if (!soDienThoai.matches(regex)) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            isValid = false;
+            return;
+        }
 
         boolean isNgay = false;
 
@@ -117,5 +126,9 @@ public class EditCommand implements Command {
             billService.updateBill(bill);
         }
 
+    }
+
+    public boolean isValidPhoneNumber() {
+        return isValid;
     }
 }

@@ -174,8 +174,9 @@ public class HotelBillManageApp extends JFrame {
                         sodienthoaiTextField, billService);
                 invoker.addToQueue(addCommand);
                 invoker.executeCommands();
-
-                clearFields();
+                if (addCommand.isValidPhoneNumber()) {
+                    clearFields();
+                }
             }
         });
         editButton.addActionListener(new ActionListener() {
@@ -186,7 +187,9 @@ public class HotelBillManageApp extends JFrame {
                 invoker.addToQueue(editCommand);
                 invoker.executeCommands();
 
-                clearFields();
+                if (editCommand.isValidPhoneNumber()) {
+                    clearFields();
+                }
             }
         });
         deleteButton.addActionListener(new ActionListener() {

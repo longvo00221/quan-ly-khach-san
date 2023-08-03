@@ -1,14 +1,13 @@
 package presentation.Command;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import domain.BillService;
-import domain.BillServiceImpl;
 import domain.model.DayBill;
 import domain.model.HourBill;
 
@@ -21,6 +20,7 @@ public class AddCommand implements Command {
     private JComboBox loaihoadonComboBox;
     private JTextField donGiaTextField;
     private BillService billService;
+    private Boolean isValid;
 
     public AddCommand(JTextField soPhongTextField, JTextField tenKhachTextField, JTextField thoiGianNhanPhongTextField,
             JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox,
@@ -35,10 +35,14 @@ public class AddCommand implements Command {
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
         this.billService = billService;
+        this.isValid = true;
     }
 
     @Override
     public void executed() {
+
+        String regex = "(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})";
+
         int soPhong = Integer.parseInt(soPhongTextField.getText());
         int phongId = soPhong;
         String tenKhachHang = tenKhachTextField.getText();
@@ -47,6 +51,13 @@ public class AddCommand implements Command {
         int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
         double donGia = Double.parseDouble(donGiaTextField.getText());
         String soDienThoai = soDienThoaiTextField.getText();
+
+        if (!soDienThoai.matches(regex)) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            isValid = false;
+            return;
+        }
+
         boolean isNgay = false; // Giả sử ban đầu loaiHoaDon là false
 
         if (selectedTypeBill == 1) {
@@ -100,6 +111,10 @@ public class AddCommand implements Command {
 
         }
 
+    }
+
+    public boolean isValidPhoneNumber() {
+        return isValid;
     }
 
 }
