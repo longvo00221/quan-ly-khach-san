@@ -10,7 +10,7 @@ public interface BillGateWay {
 
     void updateBill(Bill bill);
 
-    void deleteBill(int billId);
+    void deleteBill(int billId, int phongId);
 
     List<Bill> findBill(String name);
 

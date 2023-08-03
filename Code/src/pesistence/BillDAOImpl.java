@@ -23,8 +23,8 @@ public class BillDAOImpl implements BillDAO {
     }
 
     @Override
-    public void deleteBill(int billId) {
-        this.billGateWay.deleteBill(billId);
+    public void deleteBill(int billId, int phongId) {
+        this.billGateWay.deleteBill(billId, phongId);
 
     }
 

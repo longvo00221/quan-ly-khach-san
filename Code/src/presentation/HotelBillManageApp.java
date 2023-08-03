@@ -43,6 +43,7 @@ public class HotelBillManageApp extends JFrame {
 
     private Invoker invoker;
     private int hoaDonId;
+    private int phongId;
 
     public HotelBillManageApp() {
 
@@ -83,6 +84,7 @@ public class HotelBillManageApp extends JFrame {
                         String tenKhachHang = table.getValueAt(selectedRow, 3).toString();
                         String soDienThoai = table.getValueAt(selectedRow, 4).toString();
                         String soPhong = table.getValueAt(selectedRow, 5).toString();
+                        phongId = (int) table.getValueAt(selectedRow, 5);
                         String thang = table.getValueAt(selectedRow, 6).toString();
                         String thoiGianNhan = table.getValueAt(selectedRow, 7).toString();
                         String thoiGianTra = table.getValueAt(selectedRow, 8).toString();
@@ -200,7 +202,7 @@ public class HotelBillManageApp extends JFrame {
         });
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                DeleteCommand deleteCommand = new DeleteCommand(hoaDonId, billService);
+                DeleteCommand deleteCommand = new DeleteCommand(hoaDonId, phongId, billService);
                 invoker.addToQueue(deleteCommand);
                 invoker.executeCommands();
                 updateTableData();

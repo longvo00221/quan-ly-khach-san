@@ -93,7 +93,7 @@ public class BillJDBCGateWay implements BillGateWay {
     }
 
     @Override
-    public void deleteBill(int billId) {
+    public void deleteBill(int billId, int phongId) {
         String deleteQuery = "DELETE FROM HoaDon WHERE HoaDonId= ?";
         if (!isBillExists(billId)) {
             System.out.println("Hóa đơn không tồn tại!");
@@ -103,7 +103,7 @@ public class BillJDBCGateWay implements BillGateWay {
         try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
             statement.setInt(1, billId);
             statement.executeUpdate();
-            updateRoomStatus(billId, false);
+            updateRoomStatus(phongId, false);
         } catch (Exception e) {
             System.out.println("Lỗi khi xóa ");
         }

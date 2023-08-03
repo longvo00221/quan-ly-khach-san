@@ -50,7 +50,7 @@ public class EditCommand implements Command {
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
         boolean loaiHoaDon = Boolean.parseBoolean(loaiHoaDonTextField.getText());
         int thang = Integer.parseInt(thangTextField.getText());
-        double donGia = Double.parseDouble(donGiaTextField.getText());
+        double donGia = Double.parseDouble(donGiaTextField.getText().replace(",", ""));
         String soDienThoai = soDienThoaiTextField.getText();
 
         System.out.println(thoiGianNhanPhong);

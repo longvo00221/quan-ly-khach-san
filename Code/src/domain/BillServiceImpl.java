@@ -30,8 +30,8 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public void deleteBill(int billId) {
-        billDAO.deleteBill(billId);
+    public void deleteBill(int billId, int phongId) {
+        billDAO.deleteBill(billId, phongId);
     }
 
     @Override

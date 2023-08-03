@@ -4,11 +4,14 @@ import domain.BillService;
 
 public class DeleteCommand implements Command {
     private int hoaDonId;
+    private int phongId;
+
     private BillService billService;
 
-    public DeleteCommand(int hoaDonId, BillService billService) {
+    public DeleteCommand(int hoaDonId, int phongId, BillService billService) {
         this.hoaDonId = hoaDonId;
         this.billService = billService;
+        this.phongId = phongId;
     };
 
     @Override
@@ -17,6 +20,6 @@ public class DeleteCommand implements Command {
             return;
         }
 
-        billService.deleteBill(hoaDonId);
+        billService.deleteBill(hoaDonId, phongId);
     }
 }
