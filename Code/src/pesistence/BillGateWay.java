@@ -1,28 +1,38 @@
 package pesistence;
 
+import java.sql.Date;
 import java.util.List;
 
 import domain.model.Bill;
+import presentation.HotelBillManageApp;
 
 public interface BillGateWay {
     void addBill(Bill bill);
 
     void updateBill(Bill bill);
 
-    void deleteBill(int billId);
+    void deleteBill(int billId, int phongId);
 
-    Bill findBill(int billId);
+    List<Bill> findBill(String name);
 
-    void totalByTypeOfBill(boolean typeBill);
+    int totalByTypeOfBill(boolean loaiHoaDon, Date startDate, Date endDate);
 
-    void averageMonthlyIncome(int month);
+    List<Bill> averageMonthlyIncome(Date startDate, Date endDate);
 
     boolean isBillExists(int billId);
+
+    String normalizeString(String name);
 
     List<Bill> getAllBill();
 
     void updateRoomStatus(int roomId, boolean status);
 
     boolean getRoomStatus(int roomId);
+
+    void registerView(HotelBillManageApp view);
+
+    // void unregisterView(HotelBillManageApp view);
+
+    void notifyViews();
 
 }
