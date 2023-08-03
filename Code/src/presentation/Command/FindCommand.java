@@ -38,7 +38,6 @@ public class FindCommand implements Command {
                     bill.getTenKhachHang(),
                     bill.getSoDienThoai(),
                     bill.getSoPhong(),
-                    bill.getThang(),
                     bill.getNgayNhanPhong(),
                     bill.getNgayTraPhong(),
                     bill.getLoaiHoaDon(),

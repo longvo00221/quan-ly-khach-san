@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import java.awt.event.*;
-import java.sql.Date;
 
 public class HotelBillManageApp extends JFrame {
     private DefaultTableModel tableModel;
@@ -36,7 +35,6 @@ public class HotelBillManageApp extends JFrame {
     private JTextField thoigiannhanphongTextField;
     private JTextField thoigiantraphongTextField;
     private JTextField loaihoadonTextField;
-    private JTextField thangTextField;
     private JTextField dongiaTextField;
     private JTextField sodienthoaiTextField;
     private JComboBox loaihoadonComboBox;
@@ -51,7 +49,7 @@ public class HotelBillManageApp extends JFrame {
 
         billService = new BillServiceImpl();
         invoker = new Invoker();
-
+        billService.registerView(this);
         setTitle("Hotel Bill Management");
         setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -64,7 +62,6 @@ public class HotelBillManageApp extends JFrame {
         tableModel.addColumn("Tên khách hàng");
         tableModel.addColumn("Số điện thoại");
         tableModel.addColumn("Số phòng");
-        tableModel.addColumn("Tháng");
         tableModel.addColumn("Thời gian nhận phòng ");
         tableModel.addColumn("Thời gian trả phòng");
         tableModel.addColumn("Loại hóa đơn");
@@ -87,7 +84,7 @@ public class HotelBillManageApp extends JFrame {
                     }
                     SelectCommand selectCommand = new SelectCommand(table, sophongTextField, sodienthoaiTextField,
                             tenkhachhangTextField, thoigiannhanphongTextField, thoigiantraphongTextField,
-                            thangTextField, dongiaTextField, loaihoadonComboBox);
+                            dongiaTextField, loaihoadonComboBox);
                     invoker.addToQueue(selectCommand);
                     invoker.executeCommands();
 
@@ -114,7 +111,6 @@ public class HotelBillManageApp extends JFrame {
         thoigiannhanphongTextField = new JTextField();
         thoigiantraphongTextField = new JTextField();
         loaihoadonTextField = new JTextField();
-        thangTextField = new JTextField();
         dongiaTextField = new JTextField();
         sodienthoaiTextField = new JTextField();
         String[] invoiceTypes = { "Giờ", "Ngày" };
@@ -134,8 +130,7 @@ public class HotelBillManageApp extends JFrame {
         inputPanel.add(sodienthoaiTextField);
         inputPanel.add(new JLabel("Loại hóa đơn:"));
         inputPanel.add(loaihoadonComboBox);
-        inputPanel.add(new JLabel("Tháng:"));
-        inputPanel.add(thangTextField);
+
         inputPanel.add(new JLabel("Đơn giá:"));
         inputPanel.add(dongiaTextField);
         inputPanel.add(new JLabel("Thời gian nhận phòng:"));
@@ -175,8 +170,8 @@ public class HotelBillManageApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 AddCommand addCommand = new AddCommand(sophongTextField, tenkhachhangTextField,
-                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox, thangTextField,
-                        dongiaTextField, sodienthoaiTextField, billService);
+                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox, dongiaTextField,
+                        sodienthoaiTextField, billService);
                 invoker.addToQueue(addCommand);
                 invoker.executeCommands();
 
@@ -186,7 +181,7 @@ public class HotelBillManageApp extends JFrame {
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 EditCommand editCommand = new EditCommand(hoaDonId, phongId, sophongTextField, tenkhachhangTextField,
-                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox, thangTextField,
+                        thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox,
                         dongiaTextField, sodienthoaiTextField, billService);
                 invoker.addToQueue(editCommand);
                 invoker.executeCommands();
@@ -363,7 +358,6 @@ public class HotelBillManageApp extends JFrame {
                     bill.getTenKhachHang(),
                     bill.getSoDienThoai(),
                     bill.getSoPhong(),
-                    bill.getThang(),
                     bill.getNgayNhanPhong(),
                     bill.getNgayTraPhong(),
                     loaiHoaDon,
@@ -382,7 +376,6 @@ public class HotelBillManageApp extends JFrame {
         thoigiannhanphongTextField.setText("");
         thoigiantraphongTextField.setText("");
         loaihoadonTextField.setText("");
-        thangTextField.setText("");
         dongiaTextField.setText("");
         sodienthoaiTextField.setText("");
     }

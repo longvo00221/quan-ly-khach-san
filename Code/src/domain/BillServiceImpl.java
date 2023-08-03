@@ -85,10 +85,4 @@ public class BillServiceImpl implements BillService {
     // billDAO.unregisterView(view);
     // }
 
-    @Override
-    public void notifyViews() {
-        billDAO.notifyViews();
-
-    }
-
 }

@@ -35,5 +35,4 @@ public interface BillService {
 
     // void unregisterView(HotelBillManageApp view);
 
-    void notifyViews();
 }

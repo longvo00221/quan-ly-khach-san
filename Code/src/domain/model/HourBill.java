@@ -56,12 +56,6 @@ public class HourBill extends Bill {
     }
 
     @Override
-    public int getThang() {
-        // TODO Auto-generated method stub
-        return super.getThang();
-    }
-
-    @Override
     public void setDonGia(double donGia) {
         // TODO Auto-generated method stub
         super.setDonGia(donGia);
@@ -107,12 +101,6 @@ public class HourBill extends Bill {
     public void setTenKhachHang(String tenKhachHang) {
         // TODO Auto-generated method stub
         super.setTenKhachHang(tenKhachHang);
-    }
-
-    @Override
-    public void setThang(int thang) {
-        // TODO Auto-generated method stub
-        super.setThang(thang);
     }
 
     public int getSoGio() {

@@ -34,6 +34,4 @@ public interface BillDAO {
 
     // void unregisterView(HotelBillManageApp view);
 
-    void notifyViews();
-
 }

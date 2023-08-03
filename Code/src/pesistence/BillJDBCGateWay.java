@@ -46,8 +46,8 @@ public class BillJDBCGateWay implements BillGateWay {
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         } else {
-            String insertQuery = "INSERT INTO HoaDon (SoPhong, TenKhachHang, SoDienThoai, NgayNhanPhong, NgayTraPhong, LoaiHoaDon, Thang, DonGia, PhongId)"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO HoaDon (SoPhong, TenKhachHang, SoDienThoai, NgayNhanPhong, NgayTraPhong, LoaiHoaDon, DonGia, PhongId)"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
                 statement.setInt(1, bill.getSoPhong());
                 statement.setString(2, bill.getTenKhachHang());
@@ -55,9 +55,8 @@ public class BillJDBCGateWay implements BillGateWay {
                 statement.setTimestamp(4, bill.getNgayNhanPhong());
                 statement.setTimestamp(5, bill.getNgayTraPhong());
                 statement.setBoolean(6, bill.getLoaiHoaDon());
-                statement.setInt(7, bill.getThang());
-                statement.setDouble(8, bill.getDonGia());
-                statement.setInt(9, bill.getPhongID());
+                statement.setDouble(7, bill.getDonGia());
+                statement.setInt(8, bill.getPhongID());
 
                 statement.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Thêm hóa đơn thành công", "Thông báo",
@@ -82,7 +81,7 @@ public class BillJDBCGateWay implements BillGateWay {
 
     @Override
     public void updateBill(Bill bill) {
-        String updateQuery = "UPDATE HoaDon SET SoPhong = ?, TenKhachHang = ?, NgayNhanPhong = ?, NgayTraPhong = ?, LoaiHoaDon = ?, Thang = ?, DonGia = ?, SoDienThoai = ? WHERE HoaDonId = ?";
+        String updateQuery = "UPDATE HoaDon SET SoPhong = ?, TenKhachHang = ?, NgayNhanPhong = ?, NgayTraPhong = ?, LoaiHoaDon = ?, DonGia = ?, SoDienThoai = ? WHERE HoaDonId = ?";
         if (!isBillExists(bill.getHoaDonId())) {
             JOptionPane.showMessageDialog(null, "Hóa đơn không tồn tại", "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -95,10 +94,9 @@ public class BillJDBCGateWay implements BillGateWay {
             statement.setTimestamp(3, bill.getNgayNhanPhong());
             statement.setTimestamp(4, bill.getNgayTraPhong());
             statement.setBoolean(5, bill.getLoaiHoaDon());
-            statement.setInt(6, bill.getThang());
-            statement.setDouble(7, bill.getDonGia());
-            statement.setString(8, bill.getSoDienThoai());
-            statement.setInt(9, bill.getHoaDonId());
+            statement.setDouble(6, bill.getDonGia());
+            statement.setString(7, bill.getSoDienThoai());
+            statement.setInt(8, bill.getHoaDonId());
 
             statement.executeUpdate();
             updateRoomStatus(bill.getPhongID(), true);
@@ -160,7 +158,6 @@ public class BillJDBCGateWay implements BillGateWay {
                         dayBill.setSoPhong(resultSet.getInt("SoPhong"));
                         dayBill.setTenKhachHang(resultSet.getString("TenKhachHang"));
                         dayBill.setLoaiHoaDon(loaiHoaDon);
-                        dayBill.setThang(resultSet.getInt("Thang"));
                         dayBill.setDonGia(resultSet.getInt("DonGia"));
                         dayBill.setPhongID(resultSet.getInt("PhongId"));
                         dayBill.setSoDienThoai(resultSet.getString("SoDienThoai"));
@@ -175,7 +172,6 @@ public class BillJDBCGateWay implements BillGateWay {
                         hourBill.setTenKhachHang(resultSet.getString("TenKhachHang"));
                         hourBill.setLoaiPhong(resultSet.getString("LoaiPhong"));
                         hourBill.setLoaiHoaDon(loaiHoaDon);
-                        hourBill.setThang(resultSet.getInt("Thang"));
                         hourBill.setDonGia(resultSet.getInt("DonGia"));
                         hourBill.setPhongID(resultSet.getInt("PhongId"));
                         hourBill.setSoDienThoai(resultSet.getString("SoDienThoai"));
@@ -234,7 +230,6 @@ public class BillJDBCGateWay implements BillGateWay {
                     Timestamp ngayNhanPhong = resultSet.getTimestamp("NgayNhanPhong");
                     Timestamp ngayTraPhong = resultSet.getTimestamp("NgayTraPhong");
                     boolean loaiHoaDon = resultSet.getBoolean("LoaiHoaDon");
-                    int thang = resultSet.getInt("Thang");
                     int donGia = resultSet.getInt("DonGia");
                     int phongID = resultSet.getInt("PhongId");
                     String soDienThoai = resultSet.getString("SoDienThoai");
@@ -262,7 +257,6 @@ public class BillJDBCGateWay implements BillGateWay {
                     bill.setSoPhong(soPhong);
                     bill.setTenKhachHang(tenKhachHang);
                     bill.setLoaiHoaDon(loaiHoaDon);
-                    bill.setThang(thang);
                     bill.setDonGia(donGia);
                     bill.setPhongID(phongID);
                     bill.setSoDienThoai(soDienThoai);
@@ -294,7 +288,6 @@ public class BillJDBCGateWay implements BillGateWay {
                 Timestamp ngayNhanPhong = resultSet.getTimestamp("NgayNhanPhong");
                 Timestamp ngayTraPhong = resultSet.getTimestamp("NgayTraPhong");
                 boolean loaiHoaDon = resultSet.getBoolean("LoaiHoaDon");
-                int thang = resultSet.getInt("Thang");
                 int donGia = resultSet.getInt("DonGia");
                 int phongID = resultSet.getInt("PhongId");
                 String soDienThoai = resultSet.getString("SoDienThoai");
@@ -322,7 +315,6 @@ public class BillJDBCGateWay implements BillGateWay {
                 bill.setSoPhong(soPhong);
                 bill.setTenKhachHang(tenKhachHang);
                 bill.setLoaiHoaDon(loaiHoaDon);
-                bill.setThang(thang);
                 bill.setDonGia(donGia);
                 bill.setPhongID(phongID);
                 bill.setLoaiPhong(loaiPhong);

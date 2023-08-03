@@ -11,7 +11,7 @@ public abstract class Bill {
     private Timestamp ngayNhanPhong;
     private Timestamp ngayTraPhong;
     private Boolean loaiHoaDon;
-    private int thang;
+
     private double donGia;
     private int phongID;
     private String loaiPhong;
@@ -54,14 +54,6 @@ public abstract class Bill {
 
     public void setLoaiHoaDon(Boolean loaiHoaDon) {
         this.loaiHoaDon = loaiHoaDon;
-    }
-
-    public int getThang() {
-        return thang;
-    }
-
-    public void setThang(int thang) {
-        this.thang = thang;
     }
 
     public double getDonGia() {

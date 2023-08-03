@@ -83,10 +83,4 @@ public class BillDAOImpl implements BillDAO {
 
     // }
 
-    @Override
-    public void notifyViews() {
-        this.billGateWay.notifyViews();
-
-    }
-
 }

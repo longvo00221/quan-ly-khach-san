@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import domain.BillService;
@@ -20,13 +21,12 @@ public class EditCommand implements Command {
     private JTextField thoiGianTraPhongTextField;
     private JComboBox loaihoadonComboBox;
 
-    private JTextField thangTextField;
     private JTextField donGiaTextField;
     private BillService billService;
 
     public EditCommand(int hoaDonId, int phongIdPrevious, JTextField soPhongTextField, JTextField tenKhachTextField,
             JTextField thoiGianNhanPhongTextField,
-            JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox, JTextField thangTextField,
+            JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox,
             JTextField donGiaTextField,
             JTextField soDienThoaiTextField, BillService billService) {
         this.hoaDonId = hoaDonId;
@@ -35,7 +35,6 @@ public class EditCommand implements Command {
         this.thoiGianNhanPhongTextField = thoiGianNhanPhongTextField;
         this.thoiGianTraPhongTextField = thoiGianTraPhongTextField;
         this.loaihoadonComboBox = loaihoadonComboBox;
-        this.thangTextField = thangTextField;
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
         this.billService = billService;
@@ -54,14 +53,20 @@ public class EditCommand implements Command {
         String thoiGianNhanPhong = thoiGianNhanPhongTextField.getText();
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
         int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
-        int thang = Integer.parseInt(thangTextField.getText());
         double donGia = Double.parseDouble(donGiaTextField.getText().replace(",", ""));
         String soDienThoai = soDienThoaiTextField.getText();
 
         boolean isNgay = false;
 
         if (phongId != phongIdPrevious) {
-            billService.updateRoomStatus(phongIdPrevious, false);
+            boolean trangThaiPhong = billService.getRoomStatus(phongId);
+            if (trangThaiPhong) {
+                JOptionPane.showMessageDialog(null, "Phòng đã được thuê!", "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            } else {
+                billService.updateRoomStatus(phongIdPrevious, false);
+            }
         }
 
         if (selectedTypeBill == 1) {
@@ -91,7 +96,6 @@ public class EditCommand implements Command {
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
-            bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);
@@ -105,7 +109,6 @@ public class EditCommand implements Command {
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
-            bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);

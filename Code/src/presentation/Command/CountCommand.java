@@ -40,9 +40,8 @@ public class CountCommand implements Command {
 
             // Gọi hàm đếm từ cơ sở dữ liệu
             int count = billService.totalByTypeOfBill(selectedInvoiceType, startDate, endDate);
-            DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String formattedCount = decimalFormat.format(count);
-            resultLabel.setText("Tổng: " + formattedCount);
+
+            resultLabel.setText("Tổng: " + count);
 
         } catch (ParseException ex) {
             ex.printStackTrace();

@@ -19,12 +19,11 @@ public class AddCommand implements Command {
     private JTextField thoiGianNhanPhongTextField;
     private JTextField thoiGianTraPhongTextField;
     private JComboBox loaihoadonComboBox;
-    private JTextField thangTextField;
     private JTextField donGiaTextField;
     private BillService billService;
 
     public AddCommand(JTextField soPhongTextField, JTextField tenKhachTextField, JTextField thoiGianNhanPhongTextField,
-            JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox, JTextField thangTextField,
+            JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox,
             JTextField donGiaTextField,
             JTextField soDienThoaiTextField, BillService billService) {
 
@@ -33,7 +32,6 @@ public class AddCommand implements Command {
         this.thoiGianNhanPhongTextField = thoiGianNhanPhongTextField;
         this.thoiGianTraPhongTextField = thoiGianTraPhongTextField;
         this.loaihoadonComboBox = loaihoadonComboBox;
-        this.thangTextField = thangTextField;
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
         this.billService = billService;
@@ -47,7 +45,6 @@ public class AddCommand implements Command {
         String thoiGianNhanPhong = thoiGianNhanPhongTextField.getText();
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
         int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
-        int thang = Integer.parseInt(thangTextField.getText());
         double donGia = Double.parseDouble(donGiaTextField.getText());
         String soDienThoai = soDienThoaiTextField.getText();
         boolean isNgay = false; // Giả sử ban đầu loaiHoaDon là false
@@ -82,16 +79,11 @@ public class AddCommand implements Command {
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
-            bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);
 
-            try {
-                billService.addBill(bill);
-            } catch (Exception e) {
-                System.out.println(0000000);
-            }
+            billService.addBill(bill);
 
         } else {
             HourBill bill = new HourBill();
@@ -100,16 +92,11 @@ public class AddCommand implements Command {
             bill.setNgayNhanPhong(sqlNgayNhanPhong);
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
-            bill.setThang(thang);
             bill.setDonGia(donGia);
             bill.setPhongID(phongId);
             bill.setSoDienThoai(soDienThoai);
 
-            try {
-                billService.addBill(bill);
-            } catch (Exception e) {
-                System.out.println(0000000);
-            }
+            billService.addBill(bill);
 
         }
 
