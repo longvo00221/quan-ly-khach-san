@@ -29,7 +29,7 @@ public class HotelBillManageApp extends JFrame {
     private JButton editButton;
     private JButton deleteButton;
     private JButton findButton;
-    private JButton saveButton;
+    private JButton clearButton;
     private JTextField sophongTextField;
     private JTextField tenkhachhangTextField;
     private JTextField thoigiannhanphongTextField;
@@ -119,6 +119,8 @@ public class HotelBillManageApp extends JFrame {
 
         JPanel inputPanel = new JPanel(new GridLayout(9, 3));
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        String[] billTypes = { "Ngày", "Giờ" };
+
         sophongTextField = new JTextField();
         tenkhachhangTextField = new JTextField();
         thoigiannhanphongTextField = new JTextField();
@@ -127,10 +129,14 @@ public class HotelBillManageApp extends JFrame {
         thangTextField = new JTextField();
         dongiaTextField = new JTextField();
         sodienthoaiTextField = new JTextField();
+        JComboBox<String> billTypesComboBox = new JComboBox<>(billTypes);
+
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
         findButton = new JButton("Find");
+        clearButton = new JButton("Clear");
+
         inputPanel.add(new JLabel("Tên khách hàng:"));
         inputPanel.add(tenkhachhangTextField);
         inputPanel.add(new JLabel("Số phòng:"));
@@ -151,6 +157,7 @@ public class HotelBillManageApp extends JFrame {
         buttonsPanel.add(editButton);
         buttonsPanel.add(deleteButton);
         buttonsPanel.add(findButton);
+        buttonsPanel.add(clearButton);
         JPanel mainInputPanel = new JPanel(new BorderLayout());
         mainInputPanel.add(inputPanel, BorderLayout.CENTER);
         mainInputPanel.add(buttonsPanel, BorderLayout.SOUTH);
@@ -213,6 +220,15 @@ public class HotelBillManageApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 showFindDialog();
             }
+        });
+
+        clearButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearFields();
+            }
+
         });
 
         updateTableData();
