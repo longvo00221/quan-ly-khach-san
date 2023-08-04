@@ -38,9 +38,9 @@ public class HourBill extends Bill {
     }
 
     @Override
-    public int getPhongID() {
+    public int getPhongId() {
         // TODO Auto-generated method stub
-        return super.getPhongID();
+        return super.getPhongId();
     }
 
     @Override
@@ -86,9 +86,9 @@ public class HourBill extends Bill {
     }
 
     @Override
-    public void setPhongID(int phongID) {
+    public void setPhongId(int phongID) {
         // TODO Auto-generated method stub
-        super.setPhongID(phongID);
+        super.setPhongId(phongID);
     }
 
     @Override
@@ -135,6 +135,22 @@ public class HourBill extends Bill {
     }
 
     @Override
+    public String unitCost() {
+        double cost = 0;
+        int totalHours = calculateDuration();
+
+        if (totalHours <= 24) {
+            cost = totalHours * getDonGia();
+        } else if (totalHours > 24 && totalHours <= 30) {
+            cost = 24 * getDonGia();
+        }
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        String formattedCost = decimalFormat.format(cost);
+        return formattedCost;
+    }
+
+    @Override
     public String getLoaiPhong() {
         // TODO Auto-generated method stub
         return super.getLoaiPhong();
@@ -144,22 +160,6 @@ public class HourBill extends Bill {
     public void setLoaiPhong(String loaiPhong) {
         // TODO Auto-generated method stub
         super.setLoaiPhong(loaiPhong);
-    }
-
-    @Override
-    public String unitCost() {
-        double cost = 0;
-        int totalHours = calculateDuration();
-
-        if (totalHours <= 24) {
-            cost = totalHours * getDonGia();
-        } else if (totalHours > 24 && totalHours < 30 * 24) {
-            cost = 24 * getDonGia();
-        }
-
-        DecimalFormat decimalFormat = new DecimalFormat("#,###");
-        String formattedCost = decimalFormat.format(cost);
-        return formattedCost;
     }
 
 }

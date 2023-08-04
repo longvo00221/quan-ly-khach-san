@@ -13,7 +13,7 @@ public abstract class Bill {
     private Boolean loaiHoaDon;
 
     private double donGia;
-    private int phongID;
+    private int phongId;
     private String loaiPhong;
 
     public int getSoPhong() {
@@ -64,12 +64,12 @@ public abstract class Bill {
         this.donGia = donGia;
     }
 
-    public int getPhongID() {
-        return phongID;
+    public int getPhongId() {
+        return phongId;
     }
 
-    public void setPhongID(int phongID) {
-        this.phongID = phongID;
+    public void setPhongId(int phongID) {
+        this.phongId = phongID;
     }
 
     public int getHoaDonId() {

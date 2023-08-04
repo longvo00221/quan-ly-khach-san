@@ -3,6 +3,8 @@ package presentation;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import domain.BillCaretaker;
+import domain.BillOriginator;
 import domain.BillService;
 import domain.BillServiceImpl;
 import domain.model.Bill;
@@ -13,6 +15,7 @@ import presentation.Command.DeleteCommand;
 import presentation.Command.EditCommand;
 import presentation.Command.FindCommand;
 import presentation.Command.SelectCommand;
+import presentation.Command.UndoCommand;
 import presentation.Invoker.Invoker;
 
 import java.awt.*;
@@ -29,6 +32,7 @@ public class HotelBillManageApp extends JFrame {
     private JButton editButton;
     private JButton deleteButton;
     private JButton findButton;
+    private JButton unDoButton;
     private JButton clearButton;
     private JTextField sophongTextField;
     private JTextField tenkhachhangTextField;
@@ -40,14 +44,19 @@ public class HotelBillManageApp extends JFrame {
     private JComboBox loaihoadonComboBox;
 
     private BillService billService;
+    private BillOriginator billOriginator;
+    private BillCaretaker billCaretaker;
 
     private Invoker invoker;
     private int hoaDonId;
     private int phongId;
+    private UndoCommand undoCommand;
 
     public HotelBillManageApp() {
-
+        billOriginator = new BillOriginator();
+        billCaretaker = new BillCaretaker();
         billService = new BillServiceImpl();
+        undoCommand = new UndoCommand();
         invoker = new Invoker();
         billService.registerView(this);
         setTitle("Hotel Bill Management");
@@ -84,7 +93,7 @@ public class HotelBillManageApp extends JFrame {
                     }
                     SelectCommand selectCommand = new SelectCommand(table, sophongTextField, sodienthoaiTextField,
                             tenkhachhangTextField, thoigiannhanphongTextField, thoigiantraphongTextField,
-                            dongiaTextField, loaihoadonComboBox);
+                            dongiaTextField, loaihoadonComboBox, hoaDonId, billOriginator, billCaretaker);
                     invoker.addToQueue(selectCommand);
                     invoker.executeCommands();
 
@@ -121,6 +130,7 @@ public class HotelBillManageApp extends JFrame {
         deleteButton = new JButton("Delete");
         findButton = new JButton("Find");
         clearButton = new JButton("Clear");
+        unDoButton = new JButton("Undo");
 
         inputPanel.add(new JLabel("Tên khách hàng:"));
         inputPanel.add(tenkhachhangTextField);
@@ -141,6 +151,7 @@ public class HotelBillManageApp extends JFrame {
         buttonsPanel.add(editButton);
         buttonsPanel.add(deleteButton);
         buttonsPanel.add(findButton);
+        buttonsPanel.add(unDoButton);
         buttonsPanel.add(clearButton);
         JPanel mainInputPanel = new JPanel(new BorderLayout());
         mainInputPanel.add(inputPanel, BorderLayout.CENTER);
@@ -174,7 +185,7 @@ public class HotelBillManageApp extends JFrame {
                         sodienthoaiTextField, billService);
                 invoker.addToQueue(addCommand);
                 invoker.executeCommands();
-                if (addCommand.isValidPhoneNumber()) {
+                if (addCommand.isValidPhoneNumber() && addCommand.isValidHour()) {
                     clearFields();
                 }
             }
@@ -189,6 +200,8 @@ public class HotelBillManageApp extends JFrame {
 
                 if (editCommand.isValidPhoneNumber()) {
                     clearFields();
+
+                    undoCommand.setTrangThai(true);
                 }
             }
         });
@@ -198,12 +211,26 @@ public class HotelBillManageApp extends JFrame {
                 invoker.addToQueue(deleteCommand);
                 invoker.executeCommands();
                 clearFields();
+
+                undoCommand.setTrangThai(false);
             }
         });
         findButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showFindDialog();
             }
+        });
+
+        unDoButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                undoCommand.setBillCaretaker(billCaretaker);
+                undoCommand.setBillService(billService);
+                invoker.addToQueue(undoCommand);
+                invoker.executeCommands();
+            }
+
         });
 
         clearButton.addActionListener(new ActionListener() {

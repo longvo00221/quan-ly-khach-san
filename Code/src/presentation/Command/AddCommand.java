@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import domain.BillService;
+import domain.model.Bill;
 import domain.model.DayBill;
 import domain.model.HourBill;
 
@@ -20,7 +21,11 @@ public class AddCommand implements Command {
     private JComboBox loaihoadonComboBox;
     private JTextField donGiaTextField;
     private BillService billService;
-    private Boolean isValid;
+    private Boolean isValidPhone;
+    private Boolean isValidHour;
+
+    public AddCommand() {
+    }
 
     public AddCommand(JTextField soPhongTextField, JTextField tenKhachTextField, JTextField thoiGianNhanPhongTextField,
             JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox,
@@ -35,7 +40,21 @@ public class AddCommand implements Command {
         this.donGiaTextField = donGiaTextField;
         this.soDienThoaiTextField = soDienThoaiTextField;
         this.billService = billService;
-        this.isValid = true;
+        this.isValidPhone = true;
+        this.isValidHour = true;
+
+    }
+
+    public void addBillPrevious(Bill bill, BillService billService) {
+        billService.addBill(bill);
+    }
+
+    public boolean isValidPhoneNumber() {
+        return isValidPhone;
+    }
+
+    public boolean isValidHour() {
+        return isValidHour;
     }
 
     @Override
@@ -54,7 +73,7 @@ public class AddCommand implements Command {
 
         if (!soDienThoai.matches(regex)) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            isValid = false;
+            isValidPhone = false;
             return;
         }
 
@@ -91,7 +110,7 @@ public class AddCommand implements Command {
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
             bill.setDonGia(donGia);
-            bill.setPhongID(phongId);
+            bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
 
             billService.addBill(bill);
@@ -104,17 +123,23 @@ public class AddCommand implements Command {
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
             bill.setDonGia(donGia);
-            bill.setPhongID(phongId);
+            bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
+
+            int checkHour = bill.calculateDuration();
+            System.out.println(checkHour);
+            if (checkHour > 30) {
+                JOptionPane.showMessageDialog(null, "Thời gian vượt quá 30 giờ, vui lòng dùng hóa đơn ngày!",
+                        "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
+                isValidHour = false;
+                return;
+            }
 
             billService.addBill(bill);
 
         }
 
-    }
-
-    public boolean isValidPhoneNumber() {
-        return isValid;
     }
 
 }

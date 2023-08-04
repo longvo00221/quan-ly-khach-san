@@ -11,8 +11,6 @@ public class app {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 HotelBillManageApp view = new HotelBillManageApp();
-                // BillService billService = new BillServiceImpl();
-                // billService.registerView(view);
                 view.setVisible(true);
 
             }

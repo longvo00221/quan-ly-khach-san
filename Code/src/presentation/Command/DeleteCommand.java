@@ -1,5 +1,7 @@
 package presentation.Command;
 
+import javax.swing.JOptionPane;
+
 import domain.BillService;
 
 public class DeleteCommand implements Command {
@@ -19,7 +21,17 @@ public class DeleteCommand implements Command {
         if (hoaDonId < 0) {
             return;
         }
+        int choice = JOptionPane.showConfirmDialog(
+                null,
+                "Bạn chắc chắn muốn xóa?",
+                "Xác nhận",
+                JOptionPane.OK_CANCEL_OPTION);
 
-        billService.deleteBill(hoaDonId, phongId);
+        if (choice == JOptionPane.OK_OPTION) {
+            billService.deleteBill(hoaDonId, phongId);
+        } else if (choice == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+
     }
 }

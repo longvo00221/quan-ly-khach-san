@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import domain.BillService;
+import domain.model.Bill;
 import domain.model.DayBill;
 import domain.model.HourBill;
 
@@ -24,6 +25,9 @@ public class EditCommand implements Command {
     private JTextField donGiaTextField;
     private BillService billService;
     private boolean isValid;
+
+    public EditCommand() {
+    }
 
     public EditCommand(int hoaDonId, int phongIdPrevious, JTextField soPhongTextField, JTextField tenKhachTextField,
             JTextField thoiGianNhanPhongTextField,
@@ -42,6 +46,10 @@ public class EditCommand implements Command {
         this.phongIdPrevious = phongIdPrevious;
         this.isValid = true;
     };
+
+    public void setCurentBill(Bill bill, BillService billService) {
+        billService.updateBill(bill);
+    }
 
     @Override
     public void executed() {
@@ -106,7 +114,7 @@ public class EditCommand implements Command {
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
             bill.setDonGia(donGia);
-            bill.setPhongID(phongId);
+            bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
             bill.setHoaDonId(hoaDonId);
             billService.updateBill(bill);
@@ -119,7 +127,7 @@ public class EditCommand implements Command {
             bill.setNgayTraPhong(sqlNgayTraPhong);
             bill.setLoaiHoaDon(isNgay);
             bill.setDonGia(donGia);
-            bill.setPhongID(phongId);
+            bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
             bill.setHoaDonId(hoaDonId);
 

@@ -40,9 +40,9 @@ public class DayBill extends Bill {
     }
 
     @Override
-    public int getPhongID() {
+    public int getPhongId() {
         // TODO Auto-generated method stub
-        return super.getPhongID();
+        return super.getPhongId();
     }
 
     @Override
@@ -88,9 +88,9 @@ public class DayBill extends Bill {
     }
 
     @Override
-    public void setPhongID(int phongID) {
+    public void setPhongId(int phongID) {
         // TODO Auto-generated method stub
-        super.setPhongID(phongID);
+        super.setPhongId(phongID);
     }
 
     @Override
@@ -137,18 +137,6 @@ public class DayBill extends Bill {
     }
 
     @Override
-    public String getLoaiPhong() {
-        // TODO Auto-generated method stub
-        return super.getLoaiPhong();
-    }
-
-    @Override
-    public void setLoaiPhong(String loaiPhong) {
-        // TODO Auto-generated method stub
-        super.setLoaiPhong(loaiPhong);
-    }
-
-    @Override
     public String unitCost() {
         double cost = getSoNgay() * getDonGia();
         if (getSoNgay() > 7) {
@@ -158,6 +146,18 @@ public class DayBill extends Bill {
         String formattedCost = decimalFormat.format(cost);
 
         return formattedCost;
+    }
+
+    @Override
+    public String getLoaiPhong() {
+        // TODO Auto-generated method stub
+        return super.getLoaiPhong();
+    }
+
+    @Override
+    public void setLoaiPhong(String loaiPhong) {
+        // TODO Auto-generated method stub
+        super.setLoaiPhong(loaiPhong);
     }
 
 }
