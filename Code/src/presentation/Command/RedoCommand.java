@@ -7,18 +7,13 @@ import domain.BillMemento;
 import domain.BillService;
 import domain.model.Bill;
 
-public class UndoCommand implements Command {
+public class RedoCommand implements Command {
     private Boolean trangThai;
     private BillCaretaker billCaretaker;
     private BillService billService;
     private Bill bill;
 
-    public UndoCommand() {
-
-    }
-
-    public Boolean getTrangThai() {
-        return trangThai;
+    public RedoCommand() {
     }
 
     public void setTrangThai(Boolean trangThai) {
@@ -42,17 +37,13 @@ public class UndoCommand implements Command {
             return;
         }
 
-        BillMemento billMemento = billCaretaker.undo();
+        BillMemento billMemento = billCaretaker.redo();
         bill = billMemento.getSaveBill();
 
         if (trangThai == true) {
 
             EditCommand editCommand = new EditCommand();
             editCommand.setCurentBill(bill, billService);
-            trangThai = null;
-        } else {
-            AddCommand addCommand = new AddCommand();
-            addCommand.addBillPrevious(bill, billService);
             trangThai = null;
         }
 

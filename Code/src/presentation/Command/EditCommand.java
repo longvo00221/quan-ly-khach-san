@@ -7,10 +7,13 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import domain.BillCaretaker;
+import domain.BillOriginator;
 import domain.BillService;
 import domain.model.Bill;
 import domain.model.DayBill;
 import domain.model.HourBill;
+import presentation.helper.Helper;
 
 public class EditCommand implements Command {
     private int hoaDonId;
@@ -21,10 +24,14 @@ public class EditCommand implements Command {
     private JTextField thoiGianNhanPhongTextField;
     private JTextField thoiGianTraPhongTextField;
     private JComboBox loaihoadonComboBox;
-
+    private BillOriginator billOriginator;
+    private BillCaretaker billCaretaker;
     private JTextField donGiaTextField;
     private BillService billService;
     private boolean isValid;
+    private Boolean isValidHour;
+    private boolean isValidDay;
+    private Helper helper;
 
     public EditCommand() {
     }
@@ -33,7 +40,8 @@ public class EditCommand implements Command {
             JTextField thoiGianNhanPhongTextField,
             JTextField thoiGianTraPhongTextField, JComboBox loaihoadonComboBox,
             JTextField donGiaTextField,
-            JTextField soDienThoaiTextField, BillService billService) {
+            JTextField soDienThoaiTextField, BillService billService, BillOriginator billOriginator,
+            BillCaretaker billCaretaker) {
         this.hoaDonId = hoaDonId;
         this.soPhongTextField = soPhongTextField;
         this.tenKhachTextField = tenKhachTextField;
@@ -45,6 +53,13 @@ public class EditCommand implements Command {
         this.billService = billService;
         this.phongIdPrevious = phongIdPrevious;
         this.isValid = true;
+        this.billOriginator = billOriginator;
+        this.billCaretaker = billCaretaker;
+        this.isValidHour = true;
+        this.isValidDay = true;
+
+        helper = new Helper();
+
     };
 
     public void setCurentBill(Bill bill, BillService billService) {
@@ -117,6 +132,16 @@ public class EditCommand implements Command {
             bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
             bill.setHoaDonId(hoaDonId);
+
+            boolean isValidDayBill = helper.checkTimeBillHelper("ngay", ngayTraPhong, ngayTraPhong);
+
+            if (!isValidDayBill) {
+                isValidDay = false;
+                return;
+            }
+
+            billOriginator.setBill(bill);
+            billCaretaker.pushRedoStack(billOriginator.saveStateMemento());
             billService.updateBill(bill);
 
         } else {
@@ -131,6 +156,24 @@ public class EditCommand implements Command {
             bill.setSoDienThoai(soDienThoai);
             bill.setHoaDonId(hoaDonId);
 
+            int checkHour = bill.calculateDuration();
+            if (checkHour > 30) {
+                JOptionPane.showMessageDialog(null, "Thời gian vượt quá 30 giờ, vui lòng dùng hóa đơn ngày!",
+                        "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
+                isValidHour = false;
+                return;
+            }
+
+            boolean isValidDayBill = helper.checkTimeBillHelper("gio", ngayTraPhong, ngayTraPhong);
+
+            if (!isValidDayBill) {
+                isValidHour = false;
+                return;
+            }
+
+            billOriginator.setBill(bill);
+            billCaretaker.pushRedoStack(billOriginator.saveStateMemento());
             billService.updateBill(bill);
         }
 
@@ -138,5 +181,13 @@ public class EditCommand implements Command {
 
     public boolean isValidPhoneNumber() {
         return isValid;
+    }
+
+    public boolean isValidHour() {
+        return isValidHour;
+    }
+
+    public boolean isValidDay() {
+        return isValidDay;
     }
 }

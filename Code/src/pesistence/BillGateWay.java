@@ -29,10 +29,10 @@ public interface BillGateWay {
 
     boolean getRoomStatus(int roomId);
 
-    void registerView(HotelBillManageApp view);
+    // void registerView(HotelBillManageApp view);
 
     // void unregisterView(HotelBillManageApp view);
 
-    void notifyViews();
+    // void notifyViews();
 
 }

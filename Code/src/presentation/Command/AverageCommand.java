@@ -46,7 +46,7 @@ public class AverageCommand implements Command {
 
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedTotal = decimalFormat.format(total);
-            resultLabel.setText("Tổng: " + formattedTotal);
+            resultLabel.setText("Tổng cộng: " + formattedTotal);
         } catch (ParseException ex) {
             ex.printStackTrace();
         }

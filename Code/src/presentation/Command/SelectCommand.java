@@ -83,7 +83,7 @@ public class SelectCommand implements Command {
             SimpleDateFormat sdf = new SimpleDateFormat(dinhDang);
             try {
                 java.util.Date nhan = sdf.parse(thoiGianNhan);
-                java.util.Date tra = sdf.parse(thoiGianNhan);
+                java.util.Date tra = sdf.parse(thoiGianTra);
                 ngayNhanPhong = new Timestamp(nhan.getTime());
                 ngayTraPhong = new Timestamp(tra.getTime());
             } catch (ParseException e) {

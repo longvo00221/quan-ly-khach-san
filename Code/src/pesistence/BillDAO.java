@@ -30,7 +30,7 @@ public interface BillDAO {
 
     boolean getRoomStatus(int roomId);
 
-    void registerView(HotelBillManageApp view);
+    // void registerView(HotelBillManageApp view);
 
     // void unregisterView(HotelBillManageApp view);
 

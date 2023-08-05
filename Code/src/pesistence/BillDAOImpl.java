@@ -72,10 +72,10 @@ public class BillDAOImpl implements BillDAO {
         return this.billGateWay.normalizeString(name);
     }
 
-    @Override
-    public void registerView(HotelBillManageApp view) {
-        this.billGateWay.registerView(view);
-    }
+    // @Override
+    // public void registerView(HotelBillManageApp view) {
+    // this.billGateWay.registerView(view);
+    // }
 
     // @Override
     // public void unregisterView(HotelBillManageApp view) {

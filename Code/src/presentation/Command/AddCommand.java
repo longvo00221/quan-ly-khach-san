@@ -11,6 +11,7 @@ import domain.BillService;
 import domain.model.Bill;
 import domain.model.DayBill;
 import domain.model.HourBill;
+import presentation.helper.Helper;
 
 public class AddCommand implements Command {
     private JTextField soPhongTextField;
@@ -23,6 +24,8 @@ public class AddCommand implements Command {
     private BillService billService;
     private Boolean isValidPhone;
     private Boolean isValidHour;
+    private boolean isValidDay;
+    private Helper helper;
 
     public AddCommand() {
     }
@@ -42,6 +45,9 @@ public class AddCommand implements Command {
         this.billService = billService;
         this.isValidPhone = true;
         this.isValidHour = true;
+        this.isValidDay = true;
+
+        helper = new Helper();
 
     }
 
@@ -57,6 +63,10 @@ public class AddCommand implements Command {
         return isValidHour;
     }
 
+    public boolean isValidDay() {
+        return isValidDay;
+    }
+
     @Override
     public void executed() {
 
@@ -68,7 +78,7 @@ public class AddCommand implements Command {
         String thoiGianNhanPhong = thoiGianNhanPhongTextField.getText();
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
         int selectedTypeBill = loaihoadonComboBox.getSelectedIndex();
-        double donGia = Double.parseDouble(donGiaTextField.getText());
+        double donGia = Double.parseDouble(donGiaTextField.getText().replace(",", ""));
         String soDienThoai = soDienThoaiTextField.getText();
 
         if (!soDienThoai.matches(regex)) {
@@ -77,16 +87,13 @@ public class AddCommand implements Command {
             return;
         }
 
-        boolean isNgay = false; // Giả sử ban đầu loaiHoaDon là false
+        boolean isNgay = false;
 
         if (selectedTypeBill == 1) {
             isNgay = true;
         } else {
             isNgay = false;
         }
-
-        System.out.println(selectedTypeBill);
-        System.out.println(isNgay);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date ngayNhanPhong = null;
@@ -97,6 +104,14 @@ public class AddCommand implements Command {
             ngayTraPhong = sdf.parse(thoiGianTraPhong);
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+
+        if (ngayTraPhong.before(ngayNhanPhong)) {
+
+            JOptionPane.showMessageDialog(null, "Ngày trả phòng không thể sớm hơn ngày nhận phòng.", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
+            isValidDay = false;
+            return;
         }
 
         java.sql.Timestamp sqlNgayNhanPhong = new java.sql.Timestamp(ngayNhanPhong.getTime());
@@ -112,6 +127,13 @@ public class AddCommand implements Command {
             bill.setDonGia(donGia);
             bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
+
+            boolean isValidDayBill = helper.checkTimeBillHelper("ngay", ngayTraPhong, ngayTraPhong);
+
+            if (!isValidDayBill) {
+                isValidDay = false;
+                return;
+            }
 
             billService.addBill(bill);
 
@@ -132,6 +154,13 @@ public class AddCommand implements Command {
                 JOptionPane.showMessageDialog(null, "Thời gian vượt quá 30 giờ, vui lòng dùng hóa đơn ngày!",
                         "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
+                isValidHour = false;
+                return;
+            }
+
+            boolean isValidDayBill = helper.checkTimeBillHelper("gio", ngayTraPhong, ngayTraPhong);
+
+            if (!isValidDayBill) {
                 isValidHour = false;
                 return;
             }

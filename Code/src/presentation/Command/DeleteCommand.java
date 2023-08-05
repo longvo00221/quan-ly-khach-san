@@ -2,6 +2,8 @@ package presentation.Command;
 
 import javax.swing.JOptionPane;
 
+import domain.BillCaretaker;
+import domain.BillOriginator;
 import domain.BillService;
 
 public class DeleteCommand implements Command {
@@ -10,11 +12,21 @@ public class DeleteCommand implements Command {
 
     private BillService billService;
 
+    public DeleteCommand() {
+    }
+
     public DeleteCommand(int hoaDonId, int phongId, BillService billService) {
         this.hoaDonId = hoaDonId;
         this.billService = billService;
         this.phongId = phongId;
+
     };
+
+    public void deleteBillCurrent(int billId, int phongId, BillService billService) {
+
+        billService.deleteBill(billId, phongId);
+
+    }
 
     @Override
     public void executed() {
@@ -29,6 +41,7 @@ public class DeleteCommand implements Command {
 
         if (choice == JOptionPane.OK_OPTION) {
             billService.deleteBill(hoaDonId, phongId);
+
         } else if (choice == JOptionPane.CANCEL_OPTION) {
             return;
         }

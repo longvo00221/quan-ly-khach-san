@@ -41,7 +41,7 @@ public class CountCommand implements Command {
             // Gọi hàm đếm từ cơ sở dữ liệu
             int count = billService.totalByTypeOfBill(selectedInvoiceType, startDate, endDate);
 
-            resultLabel.setText("Tổng: " + count);
+            resultLabel.setText("Tổng cộng: " + count);
 
         } catch (ParseException ex) {
             ex.printStackTrace();

@@ -62,7 +62,7 @@ public class BillJDBCGateWay implements BillGateWay {
                 JOptionPane.showMessageDialog(null, "Thêm hóa đơn thành công", "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
 
-                notifyViews();
+                // notifyViews();
                 updateRoomStatus(bill.getPhongId(), true);
 
             } catch (SQLException e) {
@@ -74,10 +74,10 @@ public class BillJDBCGateWay implements BillGateWay {
 
     }
 
-    @Override
-    public void registerView(HotelBillManageApp view) {
-        views.add(view);
-    }
+    // @Override
+    // public void registerView(HotelBillManageApp view) {
+    // views.add(view);
+    // }
 
     @Override
     public void updateBill(Bill bill) {
@@ -100,7 +100,7 @@ public class BillJDBCGateWay implements BillGateWay {
 
             statement.executeUpdate();
             updateRoomStatus(bill.getPhongId(), true);
-            notifyViews();
+            // notifyViews();
             JOptionPane.showMessageDialog(null, "Cập nhật thành công!", "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class BillJDBCGateWay implements BillGateWay {
             statement.executeUpdate();
             System.out.println(views);
             updateRoomStatus(phongId, false);
-            notifyViews();
+            // notifyViews();
             JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
@@ -189,7 +189,7 @@ public class BillJDBCGateWay implements BillGateWay {
                     JOptionPane.INFORMATION_MESSAGE);
 
         }
-        notifyViews();
+        // notifyViews();
         return allBills;
     }
 
@@ -389,13 +389,13 @@ public class BillJDBCGateWay implements BillGateWay {
     // views.remove(view);
     // }
 
-    @Override
-    public void notifyViews() {
-        System.out.println(views);
-        for (HotelBillManageApp view : views) {
+    // @Override
+    // public void notifyViews() {
+    // System.out.println(views);
+    // for (HotelBillManageApp view : views) {
 
-            view.update();
-        }
-    }
+    // view.update();
+    // }
+    // }
 
 }

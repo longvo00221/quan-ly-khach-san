@@ -101,7 +101,6 @@ public class DayBill extends Bill {
 
     @Override
     public void setTenKhachHang(String tenKhachHang) {
-        // TODO Auto-generated method stub
         super.setTenKhachHang(tenKhachHang);
     }
 
@@ -126,21 +125,28 @@ public class DayBill extends Bill {
 
     @Override
     public String getSoDienThoai() {
-        // TODO Auto-generated method stub
         return super.getSoDienThoai();
     }
 
     @Override
     public void setSoDienThoai(String soDienThoai) {
-        // TODO Auto-generated method stub
         super.setSoDienThoai(soDienThoai);
     }
 
     @Override
     public String unitCost() {
-        double cost = getSoNgay() * getDonGia();
-        if (getSoNgay() > 7) {
-            cost -= cost * 0.2; // Giảm 20% đơn giá cho những ngày còn lại
+        double cost = 0.0;
+        if (getSoNgay() <= 7) {
+            cost = getSoNgay() * getDonGia();
+        } else {
+            cost = 7 * getDonGia();
+            double sale = 0.0;
+
+            for (int i = 7; i < getSoNgay(); i++) {
+                sale += getDonGia() * 0.8;
+            }
+
+            cost += sale;
         }
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         String formattedCost = decimalFormat.format(cost);
