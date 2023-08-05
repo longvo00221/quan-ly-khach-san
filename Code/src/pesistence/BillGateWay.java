@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.List;
 
 import domain.model.Bill;
-import presentation.HotelBillManageApp;
 
 public interface BillGateWay {
     void addBill(Bill bill);
@@ -28,11 +27,5 @@ public interface BillGateWay {
     void updateRoomStatus(int roomId, boolean status);
 
     boolean getRoomStatus(int roomId);
-
-    // void registerView(HotelBillManageApp view);
-
-    // void unregisterView(HotelBillManageApp view);
-
-    // void notifyViews();
 
 }

@@ -4,8 +4,6 @@ import domain.model.Bill;
 
 public class BillOriginator {
     private Bill bill;
-    private int hoaDonId;
-    private int phongId;
 
     public BillOriginator() {
 

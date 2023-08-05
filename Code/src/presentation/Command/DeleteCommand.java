@@ -2,8 +2,6 @@ package presentation.Command;
 
 import javax.swing.JOptionPane;
 
-import domain.BillCaretaker;
-import domain.BillOriginator;
 import domain.BillService;
 
 public class DeleteCommand implements Command {

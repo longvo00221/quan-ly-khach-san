@@ -128,7 +128,7 @@ public class AddCommand implements Command {
             bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
 
-            boolean isValidDayBill = helper.checkTimeBillHelper("ngay", ngayTraPhong, ngayTraPhong);
+            boolean isValidDayBill = helper.checkDayBillHelper(ngayTraPhong, ngayTraPhong);
 
             if (!isValidDayBill) {
                 isValidDay = false;
@@ -158,7 +158,7 @@ public class AddCommand implements Command {
                 return;
             }
 
-            boolean isValidDayBill = helper.checkTimeBillHelper("gio", ngayTraPhong, ngayTraPhong);
+            boolean isValidDayBill = helper.checkHourBillHelper(sqlNgayTraPhong, sqlNgayNhanPhong);
 
             if (!isValidDayBill) {
                 isValidHour = false;
