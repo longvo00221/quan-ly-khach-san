@@ -25,6 +25,7 @@
 - Tìm kiếm hóa đơn theo mã hóa đơn, ngày hóa đơn, tên khách hàng hoặc mã phòng.
 - Tính tổng số lượng cho từng loại thuê phòng (hóa đơn theo giờ và hóa đơn theo ngày).
 - Tính trung bình thành tiền của hóa đơn thuê phòng trong một tháng nào đó.
+- Cho phép hoàn tác và làm lại khi người dùng thực hiện sai
 
 ## Yêu cầu
 
@@ -34,12 +35,10 @@
    - Observer
    - Command
    - Memento
-   - Singleton
+   - Facade
 
 2. Lưu trữ dữ liệu:
-   - Sử dụng File để lưu trữ dữ liệu.
-   - Sử dụng JSON để lưu trữ dữ liệu.
-   - Sử dụng hệ quản trị CSDL quan hệ (RDBMS) để lưu trữ dữ liệu.
+   - Sử dụng hệ quản trị CSDL quan hệ (RDBMS) để lưu trữ dữ liệu
 
 ## Cấu trúc báo cáo
 
