@@ -1,9 +1,6 @@
 
 import javax.swing.SwingUtilities;
 
-import domain.BillService;
-import domain.BillServiceImpl;
-import pesistence.BillJDBCGateWay;
 import presentation.HotelBillManageApp;
 
 public class app {

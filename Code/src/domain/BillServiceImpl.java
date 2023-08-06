@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.model.Bill;
-import pesistence.BillDAO;
-import pesistence.BillDAOImpl;
-import pesistence.BillJDBCGateWay;
+import persistence.BillDAO;
+import persistence.BillDAOImpl;
+import persistence.BillJDBCGateWay;
 import presentation.HotelBillManageApp;
 
 public class BillServiceImpl implements BillService {
