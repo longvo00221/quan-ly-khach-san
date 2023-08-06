@@ -1,7 +1,6 @@
 package presentation.Command;
 
 import java.sql.Date;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,8 +27,7 @@ public class CountCommand implements Command {
 
     @Override
     public void executed() {
-        // Chuyển đổi selectedMonth và selectedYear thành ngày đầu và ngày cuối của
-        // tháng
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
         try {
             Date startDate = new Date(dateFormat.parse(selectedMonth + "-" + selectedYear).getTime());
@@ -38,10 +36,9 @@ public class CountCommand implements Command {
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
             Date endDate = new Date(calendar.getTimeInMillis());
 
-            // Gọi hàm đếm từ cơ sở dữ liệu
             int count = billService.totalByTypeOfBill(selectedInvoiceType, startDate, endDate);
 
-            resultLabel.setText("Tổng: " + count);
+            resultLabel.setText("Tổng cộng: " + count);
 
         } catch (ParseException ex) {
             ex.printStackTrace();

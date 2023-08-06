@@ -1,6 +1,7 @@
 package domain;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import domain.model.Bill;
@@ -11,9 +12,12 @@ import presentation.HotelBillManageApp;
 
 public class BillServiceImpl implements BillService {
     private BillDAO billDAO;
+    List<HotelBillManageApp> views = new ArrayList<>();
+    private boolean hasPerformedAction = false;
 
     public BillServiceImpl() {
         billDAO = new BillDAOImpl(new BillJDBCGateWay());
+        views = new ArrayList<>();
     }
 
     public BillServiceImpl(BillDAO billDAO) {
@@ -23,21 +27,36 @@ public class BillServiceImpl implements BillService {
     @Override
     public void addBill(Bill bill) {
         billDAO.addBill(bill);
+        hasPerformedAction = true;
+        notifyViews();
     }
 
     @Override
     public void updateBill(Bill bill) {
         billDAO.updateBill(bill);
+        hasPerformedAction = true;
+
+        notifyViews();
+
     }
 
     @Override
     public void deleteBill(int billId, int phongId) {
         billDAO.deleteBill(billId, phongId);
+        hasPerformedAction = true;
+
+        notifyViews();
+
     }
 
     @Override
     public List<Bill> findBill(String name) {
-        return billDAO.findBill(name);
+        List<Bill> billList = billDAO.findBill(name);
+        // hasPerformedAction = true;
+
+        // notifyViews();
+        return billList;
+
     }
 
     @Override
@@ -57,7 +76,12 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public List<Bill> getAllBill() {
-        return billDAO.getAllBill();
+        List<Bill> billList = billDAO.getAllBill();
+        // hasPerformedAction = true;
+
+        // notifyViews();
+        return billList;
+
     }
 
     @Override
@@ -77,12 +101,17 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public void registerView(HotelBillManageApp view) {
-        billDAO.registerView(view);
+        views.add(view);
     }
 
-    // @Override
-    // public void unregisterView(HotelBillManageApp view) {
-    // billDAO.unregisterView(view);
-    // }
+    public void notifyViews() {
+        if (hasPerformedAction) {
+            for (HotelBillManageApp view : views) {
+                view.update();
+            }
+            hasPerformedAction = false;
+        }
+
+    }
 
 }

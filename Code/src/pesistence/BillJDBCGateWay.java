@@ -62,7 +62,6 @@ public class BillJDBCGateWay implements BillGateWay {
                 JOptionPane.showMessageDialog(null, "Thêm hóa đơn thành công", "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
 
-                notifyViews();
                 updateRoomStatus(bill.getPhongId(), true);
 
             } catch (SQLException e) {
@@ -72,11 +71,6 @@ public class BillJDBCGateWay implements BillGateWay {
             }
         }
 
-    }
-
-    @Override
-    public void registerView(HotelBillManageApp view) {
-        views.add(view);
     }
 
     @Override
@@ -100,7 +94,6 @@ public class BillJDBCGateWay implements BillGateWay {
 
             statement.executeUpdate();
             updateRoomStatus(bill.getPhongId(), true);
-            notifyViews();
             JOptionPane.showMessageDialog(null, "Cập nhật thành công!", "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
@@ -123,7 +116,6 @@ public class BillJDBCGateWay implements BillGateWay {
             statement.executeUpdate();
             System.out.println(views);
             updateRoomStatus(phongId, false);
-            notifyViews();
             JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
@@ -189,7 +181,6 @@ public class BillJDBCGateWay implements BillGateWay {
                     JOptionPane.INFORMATION_MESSAGE);
 
         }
-        notifyViews();
         return allBills;
     }
 
@@ -236,7 +227,6 @@ public class BillJDBCGateWay implements BillGateWay {
                     Bill bill;
 
                     if (loaiHoaDon) {
-                        // Nếu là DayBill thì lấy số ngày
                         bill = new DayBill();
                         ((DayBill) bill).setNgayNhanPhong(ngayNhanPhong);
                         ((DayBill) bill).setNgayTraPhong(ngayTraPhong);
@@ -244,7 +234,6 @@ public class BillJDBCGateWay implements BillGateWay {
                         ((DayBill) bill).setSoNgay(soNgay);
 
                     } else {
-                        // Nếu là HourBill thì lấy số giờ
                         bill = new HourBill();
                         ((HourBill) bill).setNgayNhanPhong(ngayNhanPhong);
                         ((HourBill) bill).setNgayTraPhong(ngayTraPhong);
@@ -294,7 +283,6 @@ public class BillJDBCGateWay implements BillGateWay {
                 Bill bill;
 
                 if (loaiHoaDon) {
-                    // Nếu là DayBill thì lấy số ngày
                     bill = new DayBill();
                     ((DayBill) bill).setNgayNhanPhong(ngayNhanPhong);
                     ((DayBill) bill).setNgayTraPhong(ngayTraPhong);
@@ -302,7 +290,6 @@ public class BillJDBCGateWay implements BillGateWay {
                     ((DayBill) bill).setSoNgay(soNgay);
 
                 } else {
-                    // Nếu là HourBill thì lấy số giờ
                     bill = new HourBill();
                     ((HourBill) bill).setNgayNhanPhong(ngayNhanPhong);
                     ((HourBill) bill).setNgayTraPhong(ngayTraPhong);
@@ -382,20 +369,6 @@ public class BillJDBCGateWay implements BillGateWay {
     public String normalizeString(String name) {
         String normalized = name.replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         return normalized;
-    }
-
-    // @Override
-    // public void unregisterView(HotelBillManageApp view) {
-    // views.remove(view);
-    // }
-
-    @Override
-    public void notifyViews() {
-        System.out.println(views);
-        for (HotelBillManageApp view : views) {
-
-            view.update();
-        }
     }
 
 }

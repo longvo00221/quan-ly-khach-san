@@ -14,6 +14,7 @@ import presentation.Command.CountCommand;
 import presentation.Command.DeleteCommand;
 import presentation.Command.EditCommand;
 import presentation.Command.FindCommand;
+import presentation.Command.RedoCommand;
 import presentation.Command.SelectCommand;
 import presentation.Command.UndoCommand;
 import presentation.Invoker.Invoker;
@@ -32,7 +33,9 @@ public class HotelBillManageApp extends JFrame {
     private JButton editButton;
     private JButton deleteButton;
     private JButton findButton;
-    private JButton unDoButton;
+    private JButton undoButton;
+    private JButton redoButton;
+
     private JButton clearButton;
     private JTextField sophongTextField;
     private JTextField tenkhachhangTextField;
@@ -51,12 +54,14 @@ public class HotelBillManageApp extends JFrame {
     private int hoaDonId;
     private int phongId;
     private UndoCommand undoCommand;
+    private RedoCommand redoCommand;
 
     public HotelBillManageApp() {
         billOriginator = new BillOriginator();
         billCaretaker = new BillCaretaker();
         billService = new BillServiceImpl();
         undoCommand = new UndoCommand();
+        redoCommand = new RedoCommand();
         invoker = new Invoker();
         billService.registerView(this);
         setTitle("Hotel Bill Management");
@@ -130,7 +135,8 @@ public class HotelBillManageApp extends JFrame {
         deleteButton = new JButton("Delete");
         findButton = new JButton("Find");
         clearButton = new JButton("Clear");
-        unDoButton = new JButton("Undo");
+        undoButton = new JButton("Undo");
+        redoButton = new JButton("Redo");
 
         inputPanel.add(new JLabel("Tên khách hàng:"));
         inputPanel.add(tenkhachhangTextField);
@@ -147,12 +153,21 @@ public class HotelBillManageApp extends JFrame {
         inputPanel.add(thoigiannhanphongTextField);
         inputPanel.add(new JLabel("Thời gian trả phòng:"));
         inputPanel.add(thoigiantraphongTextField);
+
+        thoigiannhanphongTextField.setText("2023-08-08 12:00:00");
+        thoigiantraphongTextField.setText("2023-08-09 14:00:00");
+
         buttonsPanel.add(addButton);
         buttonsPanel.add(editButton);
         buttonsPanel.add(deleteButton);
         buttonsPanel.add(findButton);
-        buttonsPanel.add(unDoButton);
         buttonsPanel.add(clearButton);
+        buttonsPanel.add(undoButton);
+        buttonsPanel.add(redoButton);
+
+        undoButton.setVisible(false);
+        redoButton.setVisible(false);
+
         JPanel mainInputPanel = new JPanel(new BorderLayout());
         mainInputPanel.add(inputPanel, BorderLayout.CENTER);
         mainInputPanel.add(buttonsPanel, BorderLayout.SOUTH);
@@ -185,7 +200,7 @@ public class HotelBillManageApp extends JFrame {
                         sodienthoaiTextField, billService);
                 invoker.addToQueue(addCommand);
                 invoker.executeCommands();
-                if (addCommand.isValidPhoneNumber() && addCommand.isValidHour()) {
+                if (addCommand.isValidPhoneNumber() && addCommand.isValidHour() && addCommand.isValidDay()) {
                     clearFields();
                 }
             }
@@ -194,14 +209,17 @@ public class HotelBillManageApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 EditCommand editCommand = new EditCommand(hoaDonId, phongId, sophongTextField, tenkhachhangTextField,
                         thoigiannhanphongTextField, thoigiantraphongTextField, loaihoadonComboBox,
-                        dongiaTextField, sodienthoaiTextField, billService);
+                        dongiaTextField, sodienthoaiTextField, billService, billOriginator, billCaretaker);
                 invoker.addToQueue(editCommand);
                 invoker.executeCommands();
 
-                if (editCommand.isValidPhoneNumber()) {
+                if (editCommand.isValidPhoneNumber() && editCommand.isValidHour() && editCommand.isValidDay()) {
+                    undoButton.setVisible(true);
+                    undoCommand.setTrangThai(true);
+                    redoCommand.setTrangThai(true);
+                    undoCommand.setPhongId(editCommand.getPhongId());
                     clearFields();
 
-                    undoCommand.setTrangThai(true);
                 }
             }
         });
@@ -211,6 +229,7 @@ public class HotelBillManageApp extends JFrame {
                 invoker.addToQueue(deleteCommand);
                 invoker.executeCommands();
                 clearFields();
+                undoButton.setVisible(true);
 
                 undoCommand.setTrangThai(false);
             }
@@ -221,7 +240,7 @@ public class HotelBillManageApp extends JFrame {
             }
         });
 
-        unDoButton.addActionListener(new ActionListener() {
+        undoButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -229,6 +248,25 @@ public class HotelBillManageApp extends JFrame {
                 undoCommand.setBillService(billService);
                 invoker.addToQueue(undoCommand);
                 invoker.executeCommands();
+                undoCommand.setTrangThai(false);
+
+                redoButton.setVisible(true);
+
+            }
+
+        });
+
+        redoButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                redoCommand.setBillCaretaker(billCaretaker);
+                redoCommand.setBillService(billService);
+                redoCommand.setPhongId(phongId);
+                invoker.addToQueue(redoCommand);
+                invoker.executeCommands();
+                redoButton.setVisible(false);
+
             }
 
         });
@@ -368,7 +406,6 @@ public class HotelBillManageApp extends JFrame {
 
         List<Bill> billList = billService.getAllBill();
 
-        // Xóa toàn bộ dữ liệu cũ trên bảng
         tableModel.setRowCount(0);
 
         // Đổ dữ liệu mới vào bảng

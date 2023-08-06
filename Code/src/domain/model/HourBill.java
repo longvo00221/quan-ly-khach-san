@@ -1,7 +1,6 @@
 package domain.model;
 
 import java.sql.Timestamp;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 
 public class HourBill extends Bill {
@@ -9,97 +8,81 @@ public class HourBill extends Bill {
 
     @Override
     public double getDonGia() {
-        // TODO Auto-generated method stub
         return super.getDonGia();
     }
 
     @Override
     public int getHoaDonId() {
-        // TODO Auto-generated method stub
         return super.getHoaDonId();
     }
 
     @Override
     public Boolean getLoaiHoaDon() {
-        // TODO Auto-generated method stub
         return super.getLoaiHoaDon();
     }
 
     @Override
     public Timestamp getNgayNhanPhong() {
-        // TODO Auto-generated method stub
         return super.getNgayNhanPhong();
     }
 
     @Override
     public Timestamp getNgayTraPhong() {
-        // TODO Auto-generated method stub
         return super.getNgayTraPhong();
     }
 
     @Override
     public int getPhongId() {
-        // TODO Auto-generated method stub
         return super.getPhongId();
     }
 
     @Override
     public int getSoPhong() {
-        // TODO Auto-generated method stub
         return super.getSoPhong();
     }
 
     @Override
     public String getTenKhachHang() {
-        // TODO Auto-generated method stub
         return super.getTenKhachHang();
     }
 
     @Override
     public void setDonGia(double donGia) {
-        // TODO Auto-generated method stub
         super.setDonGia(donGia);
     }
 
     @Override
     public void setHoaDonId(int hoaDonId) {
-        // TODO Auto-generated method stub
         super.setHoaDonId(hoaDonId);
     }
 
     @Override
     public void setLoaiHoaDon(Boolean loaiHoaDon) {
-        // TODO Auto-generated method stub
         super.setLoaiHoaDon(loaiHoaDon);
     }
 
     @Override
     public void setNgayNhanPhong(Timestamp ngayNhanPhong) {
-        // TODO Auto-generated method stub
         super.setNgayNhanPhong(ngayNhanPhong);
     }
 
     @Override
     public void setNgayTraPhong(Timestamp ngayTraPhong) {
-        // TODO Auto-generated method stub
         super.setNgayTraPhong(ngayTraPhong);
     }
 
     @Override
     public void setPhongId(int phongID) {
-        // TODO Auto-generated method stub
         super.setPhongId(phongID);
     }
 
     @Override
     public void setSoPhong(int soPhong) {
-        // TODO Auto-generated method stub
         super.setSoPhong(soPhong);
     }
 
     @Override
     public void setTenKhachHang(String tenKhachHang) {
-        // TODO Auto-generated method stub
         super.setTenKhachHang(tenKhachHang);
     }
 
@@ -124,13 +107,11 @@ public class HourBill extends Bill {
 
     @Override
     public String getSoDienThoai() {
-        // TODO Auto-generated method stub
         return super.getSoDienThoai();
     }
 
     @Override
     public void setSoDienThoai(String soDienThoai) {
-        // TODO Auto-generated method stub
         super.setSoDienThoai(soDienThoai);
     }
 
@@ -152,13 +133,11 @@ public class HourBill extends Bill {
 
     @Override
     public String getLoaiPhong() {
-        // TODO Auto-generated method stub
         return super.getLoaiPhong();
     }
 
     @Override
     public void setLoaiPhong(String loaiPhong) {
-        // TODO Auto-generated method stub
         super.setLoaiPhong(loaiPhong);
     }
 

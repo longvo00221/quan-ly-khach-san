@@ -3,8 +3,6 @@ package domain;
 import java.sql.Date;
 import java.util.List;
 
-import javax.swing.text.View;
-
 import domain.model.Bill;
 import presentation.HotelBillManageApp;
 
@@ -32,7 +30,5 @@ public interface BillService {
     boolean getRoomStatus(int roomId);
 
     void registerView(HotelBillManageApp view);
-
-    // void unregisterView(HotelBillManageApp view);
 
 }
