@@ -12,12 +12,17 @@ public class RedoCommand implements Command {
     private BillCaretaker billCaretaker;
     private BillService billService;
     private Bill bill;
+    private int phongId;
 
     public RedoCommand() {
     }
 
     public void setTrangThai(Boolean trangThai) {
         this.trangThai = trangThai;
+    }
+
+    public void setPhongId(int phongId) {
+        this.phongId = phongId;
     }
 
     public void setBillCaretaker(BillCaretaker billCaretaker) {
@@ -43,7 +48,7 @@ public class RedoCommand implements Command {
         if (trangThai == true) {
 
             EditCommand editCommand = new EditCommand();
-            editCommand.setCurentBill(bill, billService);
+            editCommand.setCurentBill(bill, billService, phongId);
             trangThai = null;
         }
 

@@ -32,6 +32,7 @@ public class EditCommand implements Command {
     private Boolean isValidHour;
     private boolean isValidDay;
     private Helper helper;
+    private int phongId;
 
     public EditCommand() {
     }
@@ -57,13 +58,15 @@ public class EditCommand implements Command {
         this.billCaretaker = billCaretaker;
         this.isValidHour = true;
         this.isValidDay = true;
+        this.phongId = 0;
 
         helper = new Helper();
 
     };
 
-    public void setCurentBill(Bill bill, BillService billService) {
+    public void setCurentBill(Bill bill, BillService billService, int phongId) {
         billService.updateBill(bill);
+        billService.updateRoomStatus(phongId, false);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class EditCommand implements Command {
         String regex = "(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})";
 
         int soPhong = Integer.parseInt(soPhongTextField.getText());
-        int phongId = soPhong;
+        phongId = soPhong;
         String tenKhachHang = tenKhachTextField.getText();
         String thoiGianNhanPhong = thoiGianNhanPhongTextField.getText();
         String thoiGianTraPhong = thoiGianTraPhongTextField.getText();
@@ -133,7 +136,7 @@ public class EditCommand implements Command {
             bill.setSoDienThoai(soDienThoai);
             bill.setHoaDonId(hoaDonId);
 
-            boolean isValidDayBill = helper.checkDayBillHelper(ngayTraPhong, ngayTraPhong);
+            boolean isValidDayBill = helper.checkDayBillHelper(ngayTraPhong, ngayNhanPhong);
 
             if (!isValidDayBill) {
                 isValidDay = false;
@@ -177,6 +180,10 @@ public class EditCommand implements Command {
             billService.updateBill(bill);
         }
 
+    }
+
+    public int getPhongId() {
+        return phongId;
     }
 
     public boolean isValidPhoneNumber() {

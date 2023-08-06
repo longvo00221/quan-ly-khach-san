@@ -128,7 +128,7 @@ public class AddCommand implements Command {
             bill.setPhongId(phongId);
             bill.setSoDienThoai(soDienThoai);
 
-            boolean isValidDayBill = helper.checkDayBillHelper(ngayTraPhong, ngayTraPhong);
+            boolean isValidDayBill = helper.checkDayBillHelper(ngayTraPhong, ngayNhanPhong);
 
             if (!isValidDayBill) {
                 isValidDay = false;

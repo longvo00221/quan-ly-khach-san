@@ -12,6 +12,7 @@ public class UndoCommand implements Command {
     private BillCaretaker billCaretaker;
     private BillService billService;
     private Bill bill;
+    private int phongId;
 
     public UndoCommand() {
 
@@ -23,6 +24,10 @@ public class UndoCommand implements Command {
 
     public void setTrangThai(Boolean trangThai) {
         this.trangThai = trangThai;
+    }
+
+    public void setPhongId(int phongId) {
+        this.phongId = phongId;
     }
 
     public void setBillCaretaker(BillCaretaker billCaretaker) {
@@ -48,7 +53,7 @@ public class UndoCommand implements Command {
         if (trangThai == true) {
 
             EditCommand editCommand = new EditCommand();
-            editCommand.setCurentBill(bill, billService);
+            editCommand.setCurentBill(bill, billService, phongId);
             trangThai = null;
         } else {
             AddCommand addCommand = new AddCommand();

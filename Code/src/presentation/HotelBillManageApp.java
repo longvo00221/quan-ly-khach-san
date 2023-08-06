@@ -55,7 +55,6 @@ public class HotelBillManageApp extends JFrame {
     private int phongId;
     private UndoCommand undoCommand;
     private RedoCommand redoCommand;
-    private Boolean redoState;
 
     public HotelBillManageApp() {
         billOriginator = new BillOriginator();
@@ -155,6 +154,9 @@ public class HotelBillManageApp extends JFrame {
         inputPanel.add(new JLabel("Thời gian trả phòng:"));
         inputPanel.add(thoigiantraphongTextField);
 
+        thoigiannhanphongTextField.setText("2023-08-08 12:00:00");
+        thoigiantraphongTextField.setText("2023-08-09 14:00:00");
+
         buttonsPanel.add(addButton);
         buttonsPanel.add(editButton);
         buttonsPanel.add(deleteButton);
@@ -163,6 +165,7 @@ public class HotelBillManageApp extends JFrame {
         buttonsPanel.add(undoButton);
         buttonsPanel.add(redoButton);
 
+        undoButton.setVisible(false);
         redoButton.setVisible(false);
 
         JPanel mainInputPanel = new JPanel(new BorderLayout());
@@ -211,10 +214,12 @@ public class HotelBillManageApp extends JFrame {
                 invoker.executeCommands();
 
                 if (editCommand.isValidPhoneNumber() && editCommand.isValidHour() && editCommand.isValidDay()) {
-                    clearFields();
-
+                    undoButton.setVisible(true);
                     undoCommand.setTrangThai(true);
                     redoCommand.setTrangThai(true);
+                    undoCommand.setPhongId(editCommand.getPhongId());
+                    clearFields();
+
                 }
             }
         });
@@ -224,6 +229,7 @@ public class HotelBillManageApp extends JFrame {
                 invoker.addToQueue(deleteCommand);
                 invoker.executeCommands();
                 clearFields();
+                undoButton.setVisible(true);
 
                 undoCommand.setTrangThai(false);
             }
@@ -242,6 +248,8 @@ public class HotelBillManageApp extends JFrame {
                 undoCommand.setBillService(billService);
                 invoker.addToQueue(undoCommand);
                 invoker.executeCommands();
+                undoCommand.setTrangThai(false);
+
                 redoButton.setVisible(true);
 
             }
@@ -254,6 +262,7 @@ public class HotelBillManageApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 redoCommand.setBillCaretaker(billCaretaker);
                 redoCommand.setBillService(billService);
+                redoCommand.setPhongId(phongId);
                 invoker.addToQueue(redoCommand);
                 invoker.executeCommands();
                 redoButton.setVisible(false);

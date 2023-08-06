@@ -43,6 +43,7 @@ public class AverageCommand implements Command {
                 double unitCost = Double.parseDouble(bill.unitCost().replace(",", ""));
                 total += unitCost;
             }
+            total = total / bills.size();
 
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String formattedTotal = decimalFormat.format(total);
