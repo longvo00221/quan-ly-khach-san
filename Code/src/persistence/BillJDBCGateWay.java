@@ -29,10 +29,8 @@ public class BillJDBCGateWay implements BillGateWay {
 
         try {
             connection = DriverManager.getConnection(dbUrl, username, password);
-            System.out.println("Connected to the database successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Failed to connect to the database!");
         }
     }
 

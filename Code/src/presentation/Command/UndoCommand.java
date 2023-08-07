@@ -54,11 +54,10 @@ public class UndoCommand implements Command {
 
             EditCommand editCommand = new EditCommand();
             editCommand.setCurentBill(bill, billService, phongId);
-            trangThai = null;
         } else {
             AddCommand addCommand = new AddCommand();
             addCommand.addBillPrevious(bill, billService);
-            trangThai = null;
+
         }
 
     }

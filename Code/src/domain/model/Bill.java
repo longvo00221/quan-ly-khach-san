@@ -10,7 +10,6 @@ public abstract class Bill {
     private Timestamp ngayNhanPhong;
     private Timestamp ngayTraPhong;
     private Boolean loaiHoaDon;
-
     private double donGia;
     private int phongId;
     private String loaiPhong;

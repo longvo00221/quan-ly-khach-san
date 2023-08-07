@@ -20,10 +20,6 @@ public class BillServiceImpl implements BillService {
         views = new ArrayList<>();
     }
 
-    public BillServiceImpl(BillDAO billDAO) {
-        this.billDAO = billDAO;
-    }
-
     @Override
     public void addBill(Bill bill) {
         billDAO.addBill(bill);
@@ -52,9 +48,6 @@ public class BillServiceImpl implements BillService {
     @Override
     public List<Bill> findBill(String name) {
         List<Bill> billList = billDAO.findBill(name);
-        // hasPerformedAction = true;
-
-        // notifyViews();
         return billList;
 
     }
@@ -77,9 +70,6 @@ public class BillServiceImpl implements BillService {
     @Override
     public List<Bill> getAllBill() {
         List<Bill> billList = billDAO.getAllBill();
-        // hasPerformedAction = true;
-
-        // notifyViews();
         return billList;
 
     }
