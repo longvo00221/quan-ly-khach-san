@@ -20,10 +20,6 @@ public class BillServiceImpl implements BillService {
         views = new ArrayList<>();
     }
 
-    public BillServiceImpl(BillDAO billDAO) {
-        this.billDAO = billDAO;
-    }
-
     @Override
     public void addBill(Bill bill) {
         billDAO.addBill(bill);

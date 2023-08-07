@@ -230,7 +230,6 @@ public class HotelBillManageApp extends JFrame {
                 invoker.executeCommands();
                 clearFields();
                 undoButton.setVisible(true);
-
                 undoCommand.setTrangThai(false);
             }
         });
@@ -254,7 +253,6 @@ public class HotelBillManageApp extends JFrame {
                     redoButton.setVisible(true);
 
                 }
-
                 undoCommand.setTrangThai(null);
 
             }
@@ -277,7 +275,6 @@ public class HotelBillManageApp extends JFrame {
         });
 
         clearButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 clearFields();
@@ -413,7 +410,6 @@ public class HotelBillManageApp extends JFrame {
 
         tableModel.setRowCount(0);
 
-        // Đổ dữ liệu mới vào bảng
         for (Bill bill : billList) {
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
             String donGia = decimalFormat.format(bill.getDonGia());
