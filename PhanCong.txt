@@ -1,0 +1,5 @@
+Long: Tầng presentation, phần Thiết kế, Thu thập yêu cầu
+Hung:Tầng persistence, Cở sở dữ liệu, Thu thập yêu cầu
+Đạt: Tầng presentation,phần Thiết kế
+Quân: Tầng domain, Phân tích yêu cầu
+Chủ "TỊCH": Tầng domain, Phân tích yêu cầu
