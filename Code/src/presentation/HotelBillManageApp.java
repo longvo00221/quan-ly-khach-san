@@ -248,9 +248,14 @@ public class HotelBillManageApp extends JFrame {
                 undoCommand.setBillService(billService);
                 invoker.addToQueue(undoCommand);
                 invoker.executeCommands();
-                undoCommand.setTrangThai(false);
+                undoButton.setVisible(false);
+                if (undoCommand.getTrangThai()) {
 
-                redoButton.setVisible(true);
+                    redoButton.setVisible(true);
+
+                }
+
+                undoCommand.setTrangThai(null);
 
             }
 

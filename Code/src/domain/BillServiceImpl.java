@@ -52,9 +52,6 @@ public class BillServiceImpl implements BillService {
     @Override
     public List<Bill> findBill(String name) {
         List<Bill> billList = billDAO.findBill(name);
-        // hasPerformedAction = true;
-
-        // notifyViews();
         return billList;
 
     }
@@ -77,9 +74,6 @@ public class BillServiceImpl implements BillService {
     @Override
     public List<Bill> getAllBill() {
         List<Bill> billList = billDAO.getAllBill();
-        // hasPerformedAction = true;
-
-        // notifyViews();
         return billList;
 
     }
